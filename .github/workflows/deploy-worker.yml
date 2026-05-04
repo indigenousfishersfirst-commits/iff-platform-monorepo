@@ -1,4 +1,4 @@
-name: Deploy iff-platform Worker
+name: Deploy Worker (iff-platform)
 
 on:
   push:
