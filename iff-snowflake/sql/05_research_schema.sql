@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS VARIABLES (
   PROMOTED_AT      TIMESTAMP_NTZ
 );
 
-CREATE INDEX IF NOT EXISTS IDX_VARS_NAME ON VARIABLES(VARIABLE_NAME);
+-- [SF-incompat] CREATE INDEX IF NOT EXISTS IDX_VARS_NAME ON VARIABLES(VARIABLE_NAME);
 
 -- ----------------------------------------------------------------
 -- COMPETITORS — competitive intelligence registry

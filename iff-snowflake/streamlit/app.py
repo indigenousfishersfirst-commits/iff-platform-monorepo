@@ -53,7 +53,7 @@ st.markdown("""
 # ---------- Cross-links ----------
 st.markdown("### Quick links")
 c1, c2, c3, c4, c5, c6 = st.columns(6)
-with c1: st.link_button("🎣 Harvester",  "https://app.cantekhi.com")
+with c1: st.link_button("🎣 Harvester",  "https://harvester.cantekhi.com")
 with c2: st.link_button("🔨 Auction",    "https://auction.cantekhi.com")
 with c3: st.link_button("👨‍🍳 Chef",       "https://chef.cantekhi.com")
 with c4: st.link_button("🛒 Market",     "https://market.cantekhi.com")
