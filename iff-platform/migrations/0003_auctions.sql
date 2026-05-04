@@ -21,7 +21,9 @@ CREATE TABLE IF NOT EXISTS auctions (
 CREATE INDEX IF NOT EXISTS idx_auctions_status   ON auctions(status);
 CREATE INDEX IF NOT EXISTS idx_auctions_endtime  ON auctions(ends_at);
 
-CREATE TABLE IF NOT EXISTS bids (
+-- platform_bids: live auction bids for the unified platform.
+-- Distinct from existing 'bids' table which holds legacy lot offers.
+CREATE TABLE IF NOT EXISTS platform_bids (
   bid_id        TEXT PRIMARY KEY,
   auction_id    TEXT NOT NULL,
   buyer_id      TEXT NOT NULL,
@@ -34,8 +36,8 @@ CREATE TABLE IF NOT EXISTS bids (
   rejection_reason TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_bids_auction ON bids(auction_id, placed_at DESC);
-CREATE INDEX IF NOT EXISTS idx_bids_buyer   ON bids(buyer_id);
+CREATE INDEX IF NOT EXISTS idx_platform_bids_auction ON platform_bids(auction_id, placed_at DESC);
+CREATE INDEX IF NOT EXISTS idx_platform_bids_buyer   ON platform_bids(buyer_id);
 
 CREATE TABLE IF NOT EXISTS settlements (
   settlement_id  TEXT PRIMARY KEY,

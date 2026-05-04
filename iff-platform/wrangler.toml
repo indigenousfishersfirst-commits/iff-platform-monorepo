@@ -2,7 +2,7 @@ name = "iff-platform"
 main = "src/index.js"
 compatibility_date = "2025-04-15"
 compatibility_flags = ["nodejs_compat"]
-account_id = "yshoftq-ql22196"   # Cloudflare account id (placeholder — replace)
+account_id = "95b7e4d9cf0092041f3b8cd88dfe882b"
 
 [vars]
 ENV = "production"
@@ -18,17 +18,21 @@ SNOWFLAKE_BASE_URL = "https://yshoftq-ql22196.snowflakecomputing.com"
 # ---- Bindings (replace IDs after `wrangler ... create`) ----
 [[d1_databases]]
 binding = "DB"
-database_name = "iff_platform_db"
-database_id = "REPLACE_AFTER_CREATE"
+database_name = "iff-app-db"
+database_id = "82c629d7-c643-4008-8660-a0b1f2ce6b92"
 migrations_dir = "migrations"
 
 [[kv_namespaces]]
 binding = "KV"
-id = "REPLACE_AFTER_CREATE"
+id = "152afd3c93b14ff3920a871dcde77fe2"
 
 [[r2_buckets]]
 binding = "RESEARCH_BUCKET"
 bucket_name = "iff-research-cache"
+
+[[r2_buckets]]
+binding = "TRACE_BUCKET"
+bucket_name = "iff-traceability-docs"
 
 [[queues.producers]]
 binding = "Q_SIGNALS"
@@ -60,19 +64,16 @@ class_name = "AuctionRoom"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["AuctionRoom"]
+new_sqlite_classes = ["AuctionRoom"]
 
-# ---- Cron triggers ----
+# ---- Cron triggers (account-wide cap is 5 on free plan;
+#      iff-price-engine already uses 2, so we use 3 here).
+# Scheduler dispatches sub-jobs internally based on minute/hour/day-of-week/day-of-month.
 [triggers]
 crons = [
-  "*/5 * * * *",        # signals sync (every 5 min)
-  "0 */1 * * *",        # toyosu / diesel / google trends (hourly)
-  "0 */6 * * *",        # NOAA env (every 6h)
-  "0 7 * * *",          # NOAA daily aggregations
-  "0 9 * * 1",          # FAO weekly (Monday 09:00 UTC)
-  "0 1 1 * *",          # PDO/ENSO monthly
-  "*/15 * * * *",       # auction watchdog
-  "0 17 * * *"          # nightly settlements run
+  "*/5 * * * *",        # 5-min tick: signals sync + auction watchdog
+  "0 * * * *",          # hourly tick: toyosu, diesel, trends, NOAA env
+  "0 7 * * *"           # daily 07:00 UTC: NOAA aggs, settlements, weekly FAO (Mon), monthly PDO/ENSO (1st)
 ]
 
 # ---- Routes ----

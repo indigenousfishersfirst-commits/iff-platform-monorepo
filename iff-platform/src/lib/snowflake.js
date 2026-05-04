@@ -104,6 +104,37 @@ export class Snowflake {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Functional helpers — used by ingest/research/etc. that take env directly.
+// ---------------------------------------------------------------------------
+
+export async function sfExec(env, sql, opts) {
+  return new Snowflake(env).exec(sql, opts);
+}
+
+export async function sfQuery(env, sql, opts) {
+  return new Snowflake(env).query(sql, opts);
+}
+
+export async function sfBatchInsert(env, table, columnsOrRows, maybeRows, opts) {
+  // Two call shapes are used in the codebase:
+  //   sfBatchInsert(env, table, columns, rows, opts?)
+  //   sfBatchInsert(env, table, rows)         // infer columns from first row
+  let columns, rows;
+  if (Array.isArray(maybeRows)) {
+    columns = columnsOrRows;
+    rows = maybeRows;
+  } else {
+    rows = columnsOrRows;
+    columns = rows && rows.length ? Object.keys(rows[0]) : [];
+  }
+  return new Snowflake(env).batchInsert(table, columns, rows, opts);
+}
+
+export async function sfUpsert(env, table, keys, columns, rows, opts) {
+  return new Snowflake(env).upsert(table, keys, columns, rows, opts);
+}
+
 function formatValue(v) {
   if (v === null || v === undefined) return "NULL";
   if (typeof v === "number")  return Number.isFinite(v) ? String(v) : "NULL";

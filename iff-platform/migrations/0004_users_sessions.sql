@@ -1,7 +1,9 @@
 -- 0004_users_sessions.sql
 -- User profiles, role assignments, sessions, notification logs.
 
-CREATE TABLE IF NOT EXISTS users (
+-- platform_users: extends iff_users with platform-specific role/profile data.
+-- iff_users continues to exist for legacy app; platform_users adds richer role taxonomy.
+CREATE TABLE IF NOT EXISTS platform_users (
   user_id        TEXT PRIMARY KEY,        -- Clerk user id or generated UUID
   email          TEXT UNIQUE,
   display_name   TEXT,
@@ -13,8 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
   last_login_at  TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_role   ON users(primary_role);
-CREATE INDEX IF NOT EXISTS idx_users_nation ON users(nation);
+CREATE INDEX IF NOT EXISTS idx_platform_users_role   ON platform_users(primary_role);
+CREATE INDEX IF NOT EXISTS idx_platform_users_nation ON platform_users(nation);
 
 CREATE TABLE IF NOT EXISTS user_roles_extra (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
