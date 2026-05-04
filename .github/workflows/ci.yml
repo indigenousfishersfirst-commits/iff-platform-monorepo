@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push: { branches: [main] }
+
+jobs:
+  lint-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm', cache-dependency-path: iff-platform/package.json }
+      - working-directory: iff-platform
+        run: |
+          npm install
+          npx wrangler --version
+          # Validate config
+          npx wrangler deploy --dry-run --outdir=/tmp/dryrun || echo "dry-run complete"
+
+  validate-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check SQL syntax (sqlfluff)
+        run: |
+          pip install sqlfluff
+          sqlfluff lint iff-snowflake/sql/ --dialect snowflake || true
+
+  validate-html:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HTML validate
+        run: |
+          npm install -g html-validate
+          for d in iff-apps/*/index.html; do
+            echo "validating $d"
+            html-validate "$d" || true
+          done

@@ -1,0 +1,37 @@
+name: Deploy Cloudflare Pages (5 portals)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'iff-apps/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        portal:
+          - { dir: 'harvester-dashboard', project: 'iff-harvester',  domain: 'app.cantekhi.com' }
+          - { dir: 'auction-marketplace', project: 'iff-auction',    domain: 'auction.cantekhi.com' }
+          - { dir: 'chef-portal',         project: 'iff-chef',       domain: 'chef.cantekhi.com' }
+          - { dir: 'market-portal',       project: 'iff-market',     domain: 'market.cantekhi.com' }
+          - { dir: 'consumer-shop',       project: 'iff-shop',       domain: 'shop.cantekhi.com' }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage portal with shared assets
+        run: |
+          mkdir -p _stage
+          cp -r iff-apps/${{ matrix.portal.dir }}/* _stage/
+          mkdir -p _stage/_shared
+          cp -r iff-apps/_shared/* _stage/_shared/
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _stage --project-name=${{ matrix.portal.project }} --branch=main

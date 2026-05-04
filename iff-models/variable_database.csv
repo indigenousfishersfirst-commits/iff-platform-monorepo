@@ -1,0 +1,30 @@
+variable_name,description,category,unit,frequency,primary_source,secondary_source,typical_lag_days,used_in_patterns,used_in_models
+toyosu_sockeye_jpy_kg,Toyosu wholesale market sockeye salmon price,driver,JPY/kg,daily,Tokyo Metro Toyosu,Tradedoubler,1,P01;P09,M11;M16
+toyosu_uni_jpy_kg,Toyosu uni (sea urchin roe) wholesale price,driver,JPY/kg,daily,Tokyo Metro Toyosu,JapanFood,1,P09,M11
+fx_jpy_cad,JPY to CAD spot exchange rate,driver,JPY/CAD,hourly,exchangerate.host,RBC FX,0,P02,M11;M16
+fx_usd_cad,USD to CAD spot exchange rate,driver,USD/CAD,hourly,exchangerate.host,Bank of Canada,0,,M11;M16
+fx_eur_cad,EUR to CAD spot exchange rate,driver,EUR/CAD,hourly,exchangerate.host,ECB,0,,M16
+fx_hkd_cad,HKD to CAD spot exchange rate,driver,HKD/CAD,hourly,exchangerate.host,HKMA,0,,M16
+noaa_sst_46036,NOAA SST station 46036 SE Pacific,driver,°C,hourly,NOAA NDBC,DFO,0,P03,M16
+diesel_cad_l,BC marine diesel CAD/L,driver,CAD/L,daily,NRCan,GasBuddy,0,P04,M11;M16
+pdo_index,Pacific Decadal Oscillation index,driver,unitless,monthly,NOAA NCEI,UWASH,15,P05,M16
+oni_index,ENSO Oceanic Nino Index,driver,unitless,monthly,NOAA CPC,,15,,M16
+gtrend_dungeness,Google Trends dungeness crab BC,driver,score 0-100,weekly,Google Trends,,3,P06,M16
+gtrend_sockeye,Google Trends sockeye salmon CA,driver,score 0-100,weekly,Google Trends,,3,,M16
+eu_iuu_score,EU IUU yellow card score for Canadian seafood,driver,unitless,quarterly,EU DG MARE,,30,P07;TS-012,
+hk_wedding_index,Hong Kong wedding season demand index,driver,unitless,weekly,HK Census,Internal,7,P08,M16
+boston_show_proximity,Days until/since North Atlantic Seafood Forum,driver,days,daily,IFF event calendar,,0,P10,M11
+ts_001_active,Tariff scenario TS-001 active flag,driver,bool,event,IFF ops,,0,P11,
+cpi_food_ca,Canadian CPI food index,driver,unitless,monthly,Statistics Canada,,30,P12,M16
+bc_sockeye_landed_cad_kg,BC sockeye landed price ex-vessel,target,CAD/kg,daily,DFO,IFF,1,P01,M11;M16;M19
+bc_sockeye_export_value,BC sockeye monthly export value,target,CAD,monthly,Statistics Canada,Innovation Sci & Eco Dev,30,P02,M16
+bc_spot_prawn_cpue,BC spot prawn catch per unit effort,target,kg/trap-day,daily,DFO,Pacific Prawn Fishermen's Assn,3,P03,M16
+vessel_breakeven_cad_kg,IFF fleet breakeven price,target,CAD/kg,daily,IFF financial model,,0,P04,M19
+fraser_sockeye_return,Fraser River sockeye return forecast,target,millions of fish,annual,DFO PSC,,180,P05,M16
+bc_dungeness_ex_vessel,BC dungeness crab ex-vessel price,target,CAD/kg,daily,DFO,IFF,1,P06,M11;M19
+eu_ca_seafood_import,EU imports of Canadian seafood,target,EUR/month,monthly,Eurostat,,45,P07,
+hk_live_geoduck_price,Hong Kong live geoduck wholesale,target,HKD/kg,weekly,HK Wholesale Mkt,IFF buyers,7,P08,M11;M19
+bc_red_urchin_ex_vessel,BC red urchin ex-vessel price,target,CAD/kg,weekly,DFO,Pacific Urchin Harvesters,7,P09,M11
+us_wholesale_sockeye,US wholesale sockeye USD/kg,target,USD/kg,weekly,Urner Barry,SeafoodSource,3,P10,M11
+jp_ca_seafood_import_vol,Japan import volume from Canada,target,kg/month,monthly,Japan Customs,,45,P11,
+retail_sockeye_cad_kg,Canadian retail sockeye price,target,CAD/kg,weekly,Nielsen,Statistics Canada,7,P12,M16

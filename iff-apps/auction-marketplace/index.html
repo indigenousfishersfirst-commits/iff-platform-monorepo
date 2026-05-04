@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>IFF Auction · auction.cantekhi.com</title>
+  <link rel="stylesheet" href="/_shared/tokens.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@500;700&display=swap"/>
+  <style>
+    .auction-board { display: grid; grid-template-columns: 320px 1fr; gap: var(--iff-space-5); }
+    @media (max-width: 900px) { .auction-board { grid-template-columns: 1fr; } }
+    .lot-list { max-height: 70vh; overflow-y: auto; }
+    .lot-item { padding: 12px; border-radius: var(--iff-radius); cursor: pointer; transition: background var(--iff-dur) var(--iff-ease); }
+    .lot-item:hover { background: var(--iff-fog); }
+    .lot-item.active { background: rgba(11,83,148,.08); border-left: 3px solid var(--iff-ocean); }
+    .bid-feed { max-height: 50vh; overflow-y: auto; font-family: var(--iff-font-mono); font-size: 13px; }
+    .bid-row { padding: 6px 12px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--iff-border); }
+    .bid-row.new { animation: bid-flash .8s ease-out; }
+    @keyframes bid-flash { from { background: rgba(217,119,6,.25); } to { background: transparent; } }
+    .countdown { font-family: var(--iff-font-mono); font-size: 32px; font-weight: 700; color: var(--iff-salmon); }
+  </style>
+</head>
+<body>
+  <header class="iff-header">
+    <a class="iff-logo" href="/">
+      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0B5394"/><path d="M8 16 Q14 8 22 12 Q26 14 22 18 Q16 22 8 16 Z" fill="#fff"/></svg>
+      <span>IFF Auction</span>
+    </a>
+    <nav class="iff-nav">
+      <a href="#live">Live</a>
+      <a href="#sealed">Sealed bid</a>
+      <a href="#dutch">Dutch</a>
+      <a href="#won">My wins</a>
+    </nav>
+  </header>
+
+  <main class="iff-shell iff-fade-in">
+    <div class="iff-hero" style="background: linear-gradient(135deg, var(--iff-cedar) 0%, var(--iff-salmon) 100%);">
+      <h1>Live auctions across all Nations</h1>
+      <p>Direct from harvester to buyer. Soft-close 60s. Settlement T+1. Provenance verified end-to-end.</p>
+    </div>
+
+    <div class="auction-board">
+      <aside class="iff-card">
+        <div class="iff-stat-label" style="margin-bottom:12px;">Open auctions</div>
+        <div class="lot-list" id="lot-list"><div style="color:var(--iff-ink-muted);">Loading…</div></div>
+      </aside>
+
+      <section class="iff-card" id="auction-detail">
+        <div style="color:var(--iff-ink-muted); text-align:center; padding: 60px 0;">Select an auction to view live bids</div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import { IFFApi } from '/_shared/iff-api.js';
+    const api = new IFFApi();
+    let activeWS = null;
+
+    async function loadAuctions() {
+      try {
+        const data = await api.listAuctions({ status: 'live,scheduled' });
+        const list = document.getElementById('lot-list');
+        if (!data.auctions?.length) {
+          list.innerHTML = '<div style="color:var(--iff-ink-muted); padding:20px; text-align:center;">No open auctions</div>';
+          return;
+        }
+        list.innerHTML = data.auctions.map(a => `
+          <div class="lot-item" data-id="${a.auction_id}" onclick="window.openAuction('${a.auction_id}')">
+            <div style="font-weight:600; color:var(--iff-ink);">${a.species || a.lot_id?.slice(0,8)}</div>
+            <div style="font-size:12px; color:var(--iff-ink-muted); margin-top:2px;">
+              ${a.weight_kg?.toFixed(0) || '?'} kg · ${a.gear || '—'}
+            </div>
+            <div style="font-family:var(--iff-font-mono); margin-top:6px; color:var(--iff-ocean);">
+              $${(a.current_price || a.starting_price)?.toFixed(2)}/kg
+            </div>
+            <span class="iff-pill" style="margin-top:6px;">${a.status}</span>
+          </div>
+        `).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    window.openAuction = (id) => {
+      document.querySelectorAll('.lot-item').forEach(el => el.classList.toggle('active', el.dataset.id === id));
+      const detail = document.getElementById('auction-detail');
+      detail.innerHTML = `
+        <h2 id="auction-species">Auction ${id.slice(0,8)}</h2>
+        <div class="iff-grid iff-grid-3" style="margin-bottom:24px;">
+          <div><div class="iff-stat-label">Current high bid</div><div class="iff-stat" id="cur-bid">—</div></div>
+          <div><div class="iff-stat-label">Time left</div><div class="countdown" id="countdown">—</div></div>
+          <div><div class="iff-stat-label">Bidders</div><div class="iff-stat" id="bidder-count">0</div></div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+          <input id="bid-input" type="number" step="0.01" placeholder="Your bid $/kg" style="flex:1; padding:12px; border:1px solid var(--iff-border-strong); border-radius:var(--iff-radius); font-family:var(--iff-font-mono);"/>
+          <button class="iff-btn iff-btn--accent" onclick="window.placeBid()">Place bid</button>
+        </div>
+        <div class="iff-stat-label">Live bid feed</div>
+        <div class="bid-feed iff-card" style="margin-top:8px; padding:0;" id="bid-feed"><div class="bid-row">Waiting for bids…</div></div>
+      `;
+
+      if (activeWS) activeWS.close();
+      activeWS = api.connectAuction(id, {
+        onMessage: (msg) => {
+          if (msg.type === 'snapshot') updateAuctionView(msg.state);
+          if (msg.type === 'bid')      addBid(msg.bid);
+          if (msg.type === 'closed')   document.getElementById('countdown').textContent = 'CLOSED';
+          if (msg.type === 'tick')     document.getElementById('countdown').textContent = msg.time_left;
+        }
+      });
+    };
+
+    function updateAuctionView(state) {
+      document.getElementById('cur-bid').textContent = `$${state.current_price?.toFixed(2)}`;
+      document.getElementById('bidder-count').textContent = state.bidder_count || 0;
+    }
+    function addBid(b) {
+      const feed = document.getElementById('bid-feed');
+      const row = document.createElement('div');
+      row.className = 'bid-row new';
+      row.innerHTML = `<span>${b.buyer_id?.slice(0,8) || 'Buyer'}</span><strong>$${b.price?.toFixed(2)}</strong><span style="color:var(--iff-ink-muted);">${new Date(b.placed_at).toLocaleTimeString()}</span>`;
+      feed.prepend(row);
+      document.getElementById('cur-bid').textContent = `$${b.price?.toFixed(2)}`;
+    }
+    window.placeBid = () => {
+      const v = parseFloat(document.getElementById('bid-input').value);
+      if (v && activeWS) { activeWS.placeBid(v, null); document.getElementById('bid-input').value = ''; }
+    };
+
+    loadAuctions();
+    setInterval(loadAuctions, 30_000);
+  </script>
+</body>
+</html>

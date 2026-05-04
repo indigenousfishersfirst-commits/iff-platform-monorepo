@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>IFF Chef Portal · chef.cantekhi.com</title>
+  <link rel="stylesheet" href="/_shared/tokens.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap"/>
+</head>
+<body>
+  <header class="iff-header">
+    <a class="iff-logo" href="/">
+      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0B5394"/><path d="M8 16 Q14 8 22 12 Q26 14 22 18 Q16 22 8 16 Z" fill="#fff"/></svg>
+      <span>IFF Chef</span>
+    </a>
+    <nav class="iff-nav">
+      <a href="#available">Today's catch</a>
+      <a href="#standing">Standing orders</a>
+      <a href="#provenance">Provenance</a>
+    </nav>
+  </header>
+
+  <main class="iff-shell iff-fade-in">
+    <div class="iff-hero" style="background: linear-gradient(135deg, var(--iff-spruce) 0%, var(--iff-ocean) 100%);">
+      <h1>Direct from the dock to your kitchen.</h1>
+      <p>Reserve specific lots from named vessels and Nations. Every fish carries a verified provenance chain you can show your guests.</p>
+    </div>
+
+    <h2 id="available">Today's catch</h2>
+    <div class="iff-grid iff-grid-3" id="catch-grid">
+      <div class="iff-card" style="text-align:center; color:var(--iff-ink-muted);">Loading available lots…</div>
+    </div>
+
+    <h2 style="margin-top:48px;" id="standing">Your standing orders</h2>
+    <div class="iff-card">
+      <table class="iff-table">
+        <thead><tr><th>Species</th><th>Form</th><th>Quantity</th><th>Frequency</th><th>Next delivery</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Sockeye</td><td>Whole H&G</td><td>40 kg</td><td>Weekly · Tue</td><td>May 7</td><td><a href="#">Edit</a></td></tr>
+          <tr><td>Dungeness</td><td>Live</td><td>20 kg</td><td>Weekly · Fri</td><td>May 8</td><td><a href="#">Edit</a></td></tr>
+          <tr><td>Spot prawn</td><td>Fresh tails</td><td>10 kg</td><td>Bi-weekly</td><td>May 14</td><td><a href="#">Edit</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 style="margin-top:48px;" id="provenance">Provenance verification</h2>
+    <div class="iff-card">
+      <div class="iff-stat-label">Verify any lot ID</div>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <input id="lot-id" placeholder="LOT-2026-0347 or paste QR text" style="flex:1; padding:12px; border:1px solid var(--iff-border-strong); border-radius:var(--iff-radius);"/>
+        <button class="iff-btn" onclick="verifyLot()">Verify</button>
+      </div>
+      <div id="verify-result" style="margin-top:16px;"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { IFFApi } from '/_shared/iff-api.js';
+    const api = new IFFApi();
+
+    async function loadCatch() {
+      try {
+        const data = await api.listLots({ status: 'listed', limit: 12 });
+        const grid = document.getElementById('catch-grid');
+        if (!data.lots?.length) { grid.innerHTML = '<div class="iff-card" style="text-align:center; color:var(--iff-ink-muted);">No active listings</div>'; return; }
+        grid.innerHTML = data.lots.map(l => `
+          <div class="iff-card">
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+              <div>
+                <div style="font-family:var(--iff-font-display); font-size:20px;">${l.species}</div>
+                <div style="font-size:12px; color:var(--iff-ink-muted);">${l.gear || ''} · ${l.area || ''}</div>
+              </div>
+              <span class="iff-pill">${l.grade || '—'}</span>
+            </div>
+            <div style="margin-top:12px;">
+              <div style="font-size:13px; color:var(--iff-ink-soft);">${l.vessel_name || '—'} · ${l.nation || '—'}</div>
+              <div style="font-size:13px; color:var(--iff-ink-muted);">Landed ${new Date(l.harvested_at).toLocaleString()}</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+              <div>
+                <div class="iff-stat" style="font-size:22px;">$${l.listing_price?.toFixed(2)}/kg</div>
+                <div style="font-size:11px; color:var(--iff-ink-muted);">${l.weight_kg?.toFixed(0)} kg available</div>
+              </div>
+              <button class="iff-btn iff-btn--accent" onclick="reserve('${l.lot_id}')">Reserve</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) { console.error(e); }
+    }
+
+    window.verifyLot = async () => {
+      const id = document.getElementById('lot-id').value.trim();
+      if (!id) return;
+      try {
+        const r = await api.publicTrace(id);
+        const ok = r.chain_valid ? '✓ Verified' : '✗ Chain invalid';
+        document.getElementById('verify-result').innerHTML = `
+          <div class="iff-card" style="background: ${r.chain_valid ? 'rgba(5,150,105,.06)' : 'rgba(220,38,38,.06)'};">
+            <strong>${ok}</strong> — ${r.events_count || 0} events · ${r.lot?.species || '—'} · ${r.lot?.nation || '—'}
+            <div style="font-size:12px; color:var(--iff-ink-muted); margin-top:4px;">${r.public_url || ''}</div>
+          </div>`;
+      } catch (e) {
+        document.getElementById('verify-result').innerHTML = `<div class="iff-card" style="background: rgba(220,38,38,.06);">Could not verify: ${e.message}</div>`;
+      }
+    };
+    window.reserve = (id) => alert(`Reservation flow for ${id} — this would open a checkout sheet.`);
+
+    loadCatch();
+    setInterval(loadCatch, 60_000);
+  </script>
+</body>
+</html>

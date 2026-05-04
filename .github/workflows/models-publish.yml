@@ -1,0 +1,30 @@
+name: Models publish (Granger + forecasts)
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'   # Mondays 08:00 UTC = 01:00 Pacific
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - name: Install
+        working-directory: iff-models
+        run: pip install -r requirements.txt
+
+      - name: Publish models
+        working-directory: iff-models
+        env:
+          SNOWFLAKE_ACCOUNT:    ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:       ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD:   ${{ secrets.SNOWFLAKE_PASSWORD }}
+          WORKER_RECOMPUTE_URL: https://api.cantekhi.com/v1/signals/recompute
+          WORKER_API_KEY:       ${{ secrets.WORKER_API_KEY }}
+          GITHUB_RUN_ID:        ${{ github.run_id }}
+        run: python publish.py

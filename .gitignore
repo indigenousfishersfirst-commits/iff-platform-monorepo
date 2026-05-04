@@ -1,0 +1,14 @@
+node_modules/
+.wrangler-state/
+.wrangler/
+dist/
+*.log
+.env
+.env.local
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+.vscode/
+.idea/
+_stage/

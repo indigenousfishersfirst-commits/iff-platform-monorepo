@@ -1,0 +1,8 @@
+name: iff_streamlit_app
+channels:
+  - snowflake
+dependencies:
+  - streamlit=1.35.*
+  - pandas=2.*
+  - snowflake-snowpark-python=*
+  - plotly=5.*

@@ -1,0 +1,9 @@
+snowflake-snowpark-python>=1.20
+snowflake-connector-python>=3.10
+pandas>=2.0
+numpy>=1.26
+statsmodels>=0.14
+scikit-learn>=1.4
+xgboost>=2.0
+prophet>=1.1
+requests>=2.31

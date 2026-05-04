@@ -1,0 +1,48 @@
+name: Snowflake migrations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'iff-snowflake/sql/**'
+      - '.github/workflows/snowflake-migrate.yml'
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - name: Install snowflake-connector
+        run: pip install snowflake-connector-python
+
+      - name: Apply SQL migrations
+        env:
+          SNOWFLAKE_ACCOUNT:  ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:     ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        run: |
+          python <<'PY'
+          import os, glob
+          import snowflake.connector
+          ctx = snowflake.connector.connect(
+              account=os.environ['SNOWFLAKE_ACCOUNT'],
+              user=os.environ['SNOWFLAKE_USER'],
+              password=os.environ['SNOWFLAKE_PASSWORD'],
+              role='ACCOUNTADMIN',
+              warehouse='IFF_WH',
+          )
+          cur = ctx.cursor()
+          for path in sorted(glob.glob('iff-snowflake/sql/*.sql')):
+              print(f'--- applying {path} ---')
+              with open(path) as f:
+                  sql = f.read()
+              for stmt in [s.strip() for s in sql.split(';') if s.strip() and not s.strip().startswith('--')]:
+                  try: cur.execute(stmt)
+                  except Exception as e: print(f'WARN: {e}')
+          cur.close(); ctx.close()
+          PY

@@ -1,0 +1,95 @@
+name = "iff-platform"
+main = "src/index.js"
+compatibility_date = "2025-04-15"
+compatibility_flags = ["nodejs_compat"]
+account_id = "yshoftq-ql22196"   # Cloudflare account id (placeholder — replace)
+
+[vars]
+ENV = "production"
+PLATFORM_FEE_PCT = "0.06"
+NATION_SHARE_PCT = "0.10"
+SOFT_CLOSE_SECS = "60"
+LOG_LEVEL = "info"
+SNOWFLAKE_DATABASE = "IFF_SEAFOOD"
+SNOWFLAKE_WAREHOUSE = "IFF_WH"
+SNOWFLAKE_ROLE = "IFF_PIPELINE_ROLE"
+SNOWFLAKE_BASE_URL = "https://yshoftq-ql22196.snowflakecomputing.com"
+
+# ---- Bindings (replace IDs after `wrangler ... create`) ----
+[[d1_databases]]
+binding = "DB"
+database_name = "iff_platform_db"
+database_id = "REPLACE_AFTER_CREATE"
+migrations_dir = "migrations"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "REPLACE_AFTER_CREATE"
+
+[[r2_buckets]]
+binding = "RESEARCH_BUCKET"
+bucket_name = "iff-research-cache"
+
+[[queues.producers]]
+binding = "Q_SIGNALS"
+queue = "iff-signals"
+[[queues.producers]]
+binding = "Q_SETTLEMENTS"
+queue = "iff-settlements"
+[[queues.producers]]
+binding = "Q_RESEARCH"
+queue = "iff-research"
+
+[[queues.consumers]]
+queue = "iff-signals"
+max_batch_size = 50
+max_batch_timeout = 30
+max_retries = 3
+[[queues.consumers]]
+queue = "iff-settlements"
+max_batch_size = 10
+max_batch_timeout = 60
+[[queues.consumers]]
+queue = "iff-research"
+max_batch_size = 5
+max_batch_timeout = 60
+
+[[durable_objects.bindings]]
+name = "AUCTION_ROOM"
+class_name = "AuctionRoom"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["AuctionRoom"]
+
+# ---- Cron triggers ----
+[triggers]
+crons = [
+  "*/5 * * * *",        # signals sync (every 5 min)
+  "0 */1 * * *",        # toyosu / diesel / google trends (hourly)
+  "0 */6 * * *",        # NOAA env (every 6h)
+  "0 7 * * *",          # NOAA daily aggregations
+  "0 9 * * 1",          # FAO weekly (Monday 09:00 UTC)
+  "0 1 1 * *",          # PDO/ENSO monthly
+  "*/15 * * * *",       # auction watchdog
+  "0 17 * * *"          # nightly settlements run
+]
+
+# ---- Routes ----
+[[routes]]
+pattern = "api.cantekhi.com/*"
+zone_name = "cantekhi.com"
+
+# ---- Environments ----
+[env.staging.vars]
+ENV = "staging"
+LOG_LEVEL = "debug"
+
+[env.staging]
+name = "iff-platform-staging"
+
+[env.production]
+name = "iff-platform"
+
+[observability]
+enabled = true

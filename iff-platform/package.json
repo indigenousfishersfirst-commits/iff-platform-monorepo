@@ -1,0 +1,37 @@
+{
+  "name": "iff-platform",
+  "version": "1.0.0",
+  "description": "Indigenous Fishers First — Cloudflare Worker platform (signals, lots, auctions, traceability, settlements, research bridge)",
+  "type": "module",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev --local --persist-to .wrangler-state",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "db:create": "wrangler d1 create iff_platform_db",
+    "db:migrate:local": "wrangler d1 migrations apply iff_platform_db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply iff_platform_db --remote",
+    "db:execute": "wrangler d1 execute iff_platform_db --remote --file",
+    "kv:create": "wrangler kv:namespace create IFF_KV",
+    "queue:create:signals": "wrangler queues create iff-signals",
+    "queue:create:settlements": "wrangler queues create iff-settlements",
+    "queue:create:research": "wrangler queues create iff-research",
+    "r2:create": "wrangler r2 bucket create iff-research-cache",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "hono": "^4.6.3",
+    "jose": "^5.9.4"
+  },
+  "devDependencies": {
+    "wrangler": "^3.78.0",
+    "vitest": "^1.6.0",
+    "@cloudflare/workers-types": "^4.20240925.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
