@@ -1,16 +1,19 @@
 // _shared/iff-api.js — single API client for all 5 IFF portals
-// Uses the same Worker base for every portal.
+// REST base = Snowflake-backed iff-api worker (data.cantekhi.com)
+// WS  base  = iff-platform worker with Durable Objects (api.cantekhi.com)
 // Token persisted in localStorage; ApiKey fallback supported via env.
 
-const DEFAULT_API = "https://api.cantekhi.com";
+const DEFAULT_API    = "https://data.cantekhi.com";
+const DEFAULT_WS_API = "https://api.cantekhi.com";
 
 export class IFFApi {
-  constructor({ base, token, apiKey } = {}) {
-    this.base = base || (typeof window !== 'undefined' && window.IFF_API_BASE) || DEFAULT_API;
-    this.token = token || (typeof localStorage !== 'undefined' ? localStorage.getItem('iff_token') : null);
+  constructor({ base, wsBase, token, apiKey } = {}) {
+    this.base   = base   || (typeof window !== 'undefined' && window.IFF_API_BASE) || DEFAULT_API;
+    this.wsBase = wsBase || (typeof window !== 'undefined' && window.IFF_WS_BASE)  || DEFAULT_WS_API;
+    this.token  = token  || (typeof localStorage !== 'undefined' ? localStorage.getItem('iff_token') : null);
     this.apiKey = apiKey || (typeof window !== 'undefined' ? window.IFF_API_KEY : null);
   }
-  setToken(t) { this.token = t; if (typeof localStorage !== 'undefined') localStorage.setItem('iff_token', t); }
+  setToken(t)  { this.token = t; if (typeof localStorage !== 'undefined') localStorage.setItem('iff_token', t); }
   clearToken() { this.token = null; if (typeof localStorage !== 'undefined') localStorage.removeItem('iff_token'); }
 
   async _fetch(path, opts = {}) {
@@ -51,39 +54,11 @@ export class IFFApi {
   createAuction(body) { return this._fetch('/v1/auctions', { method: 'POST', body: JSON.stringify(body) }); }
 
   connectAuction(auctionId, { onMessage, onClose, onError } = {}) {
-    const proto = this.base.replace(/^https/, 'wss').replace(/^http/, 'ws');
+    const proto = this.wsBase.replace(/^https/, 'wss').replace(/^http/, 'ws');
     const ws = new WebSocket(`${proto}/ws/auction/${auctionId}${this.token ? '?token=' + encodeURIComponent(this.token) : ''}`);
     ws.addEventListener('message', e => onMessage && onMessage(JSON.parse(e.data)));
-    ws.addEventListener('close', e => onClose && onClose(e));
-    ws.addEventListener('error', e => onError && onError(e));
-    ws.placeBid = (price, qty) => ws.send(JSON.stringify({ type: 'bid', price, quantity_kg: qty }));
+    ws.addEventListener('close',   e => onClose   && onClose(e));
+    ws.addEventListener('error',   e => onError   && onError(e));
     return ws;
   }
-
-  // --- Traceability ---
-  appendEvent(body) { return this._fetch('/v1/trace/events', { method: 'POST', body: JSON.stringify(body) }); }
-  getLotChain(lotId) { return this._fetch(`/v1/trace/lot/${lotId}`); }
-
-  // --- Settlements ---
-  settlements(filter = {}) {
-    const q = new URLSearchParams(filter).toString();
-    return this._fetch(`/v1/settlements${q ? '?' + q : ''}`);
-  }
-
-  // --- Research ---
-  researchScans(filter = {}) {
-    const q = new URLSearchParams(filter).toString();
-    return this._fetch(`/v1/research/scans${q ? '?' + q : ''}`);
-  }
-  newResearchScan(topic) { return this._fetch('/v1/research/scans', { method: 'POST', body: JSON.stringify({ topic }) }); }
-
-  // --- Public (no auth) ---
-  publicTrace(lotId) { return this._fetch(`/public/trace/${lotId}`); }
-  publicSignals() { return this._fetch('/public/signals/highlights'); }
-}
-
-// Auto-instantiate global if loaded as classic script
-if (typeof window !== 'undefined') {
-  window.IFFApi = IFFApi;
-  window.iff = new IFFApi();
 }
