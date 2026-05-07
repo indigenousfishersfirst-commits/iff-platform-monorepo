@@ -1,126 +1,143 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>IFF Harvester</title><style>*{box-sizing:border-box;margin:0}body{font-family:-apple-system,sans-serif;background:#0a1929;color:#e8f4f8}.hdr{background:linear-gradient(135deg,#088395,#05BFDB);padding:18px 32px}.hdr h1{font-size:20px}.shell{max-width:900px;margin:0 auto;padding:24px}.hero{padding:40px 36px;border-radius:18px;margin-bottom:32px;background:url('https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c1bc664577218bfe57d2186710972a310cee75d9.jpg') center/cover;position:relative}.hero::before{content:'';position:absolute;inset:0;background:rgba(10,25,41,.65);border-radius:18px}.hero *{position:relative}h3{color:#05BFDB;font-size:15px;margin:24px 0 14px;text-transform:uppercase}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:20px}.card{background:rgba(8,131,149,0.05);border:1px solid rgba(8,131,149,.18);border-radius:14px;padding:18px;transition:all .2s;cursor:pointer}.card:hover,.card.selected{border-color:#05BFDB;background:rgba(5,191,219,.08);transform:translateY(-2px)}.card.selected{box-shadow:0 0 0 2px #05BFDB}.price{font-size:22px;font-weight:800;color:#05BFDB;margin:6px 0}.label{font-size:11px;color:#6ba8b8;text-transform:uppercase;margin-bottom:4px}.meta{font-size:13px;color:#7ba8b8;margin:4px 0}.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}.pill-fast{background:rgba(16,185,129,.12);color:#10b981}.pill-mod{background:rgba(251,191,36,.12);color:#fbbf24}.pill-slow{background:rgba(239,68,68,.12);color:#ef4444}.btn{background:linear-gradient(135deg,#088395,#05BFDB);color:white;border:none;border-radius:10px;padding:14px 28px;font-weight:600;cursor:pointer;font-size:15px;width:100%;margin-top:16px}.btn:disabled{opacity:.4;cursor:not-allowed}.btn-back{background:transparent;border:1px solid rgba(8,131,149,.3);color:#6ba8b8;margin-top:8px}input,select{background:#061525;border:1px solid rgba(8,131,149,.25);border-radius:10px;padding:12px 14px;color:#e8f4f8;width:100%;margin-bottom:12px;font-size:15px}select{appearance:none}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.step{display:none}.step.active{display:block}.progress{display:flex;gap:4px;margin-bottom:28px}.progress-dot{flex:1;height:4px;border-radius:2px;background:rgba(8,131,149,.2)}.progress-dot.done{background:#05BFDB}.progress-dot.current{background:linear-gradient(90deg,#088395,#05BFDB)}.estimate-card{background:linear-gradient(135deg,rgba(8,131,149,.1),rgba(5,191,219,.05));border:1px solid rgba(5,191,219,.3);border-radius:14px;padding:20px;margin-bottom:12px;cursor:pointer;transition:all .2s}.estimate-card:hover{border-color:#05BFDB;transform:translateY(-2px)}.estimate-card.best{border-color:#10b981;background:rgba(16,185,129,.05)}.tag{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:700;margin-left:8px}</style></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>IFF Harvester</title><style>*{box-sizing:border-box;margin:0}body{font-family:-apple-system,sans-serif;background:#0a1929;color:#e8f4f8}.hdr{background:linear-gradient(135deg,#088395,#05BFDB);padding:18px 32px}.hdr h1{font-size:20px}.shell{max-width:900px;margin:0 auto;padding:24px}.hero{padding:40px 36px;border-radius:18px;margin-bottom:32px;background:url('https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c1bc664577218bfe57d2186710972a310cee75d9.jpg') center/cover;position:relative}.hero::before{content:'';position:absolute;inset:0;background:rgba(10,25,41,.65);border-radius:18px}.hero *{position:relative}h3{color:#05BFDB;font-size:15px;margin:24px 0 14px;text-transform:uppercase}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:20px}.card{background:rgba(8,131,149,0.05);border:1px solid rgba(8,131,149,.18);border-radius:14px;padding:18px;transition:all .2s;cursor:pointer}.card:hover,.card.selected{border-color:#05BFDB;background:rgba(5,191,219,.08);transform:translateY(-2px)}.card.selected{box-shadow:0 0 0 2px #05BFDB}.price{font-size:22px;font-weight:800;color:#05BFDB;margin:6px 0}.label{font-size:11px;color:#6ba8b8;text-transform:uppercase;margin-bottom:4px}.meta{font-size:13px;color:#7ba8b8;margin:4px 0}.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}.pill-fast{background:rgba(16,185,129,.12);color:#10b981}.pill-mod{background:rgba(251,191,36,.12);color:#fbbf24}.pill-slow{background:rgba(239,68,68,.12);color:#ef4444}.btn{background:linear-gradient(135deg,#088395,#05BFDB);color:white;border:none;border-radius:10px;padding:14px 28px;font-weight:600;cursor:pointer;font-size:15px;width:100%;margin-top:16px}.btn:disabled{opacity:.4;cursor:not-allowed}.btn-back{background:transparent;border:1px solid rgba(8,131,149,.3);color:#6ba8b8;margin-top:8px}input,select{background:#061525;border:1px solid rgba(8,131,149,.25);border-radius:10px;padding:12px 14px;color:#e8f4f8;width:100%;margin-bottom:12px;font-size:15px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.step{display:none}.step.active{display:block}.progress{display:flex;gap:4px;margin-bottom:28px}.progress-dot{flex:1;height:4px;border-radius:2px;background:rgba(8,131,149,.2)}.progress-dot.done{background:#05BFDB}.progress-dot.current{background:linear-gradient(90deg,#088395,#05BFDB)}.estimate-card{background:linear-gradient(135deg,rgba(8,131,149,.1),rgba(5,191,219,.05));border:1px solid rgba(5,191,219,.3);border-radius:14px;padding:20px;margin-bottom:12px;cursor:pointer;transition:all .2s}.estimate-card:hover{border-color:#05BFDB;transform:translateY(-2px)}.estimate-card.best{border-color:#10b981;background:rgba(16,185,129,.05)}.estimate-card.sel{box-shadow:0 0 0 2px #05BFDB}.tag{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:700;margin-left:8px}</style></head><body>
 <div class="hdr"><h1>IFF Harvester Dashboard</h1></div>
 <div class="shell">
-<div class="hero"><h2 style="font-size:24px">List Your Catch</h2><p style="opacity:.85;margin-top:6px">Step through the wizard below. We'll estimate your best return.</p></div>
+<div class="hero"><h2 style="font-size:24px">List Your Catch</h2><p style="opacity:.85;margin-top:6px">Step through the wizard. We'll show you the best return options.</p></div>
 <div class="progress" id="progress"><div class="progress-dot current"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div></div>
 
 <div id="step1" class="step active">
 <h3>Step 1: What did you catch?</h3>
 <div class="grid" id="species-grid"></div>
-<button class="btn" onclick="nextStep(2)" id="btn1" disabled>Continue</button>
+<button class="btn" onclick="goStep(2)" id="btn1" disabled>Continue</button>
 </div>
 
 <div id="step2" class="step">
 <h3>Step 2: Catch details</h3>
 <div class="form-grid">
-<div><label class="label">Weight (kg)</label><input id="f-weight" type="number" placeholder="500" oninput="checkStep2()"/></div>
-<div><label class="label">Grade</label><select id="f-grade" onchange="checkStep2()"><option value="">Select grade...</option><option>AA - Sashimi</option><option>A - Premium</option><option>B - Standard</option></select></div>
+<div><label class="label">Weight (lbs)</label><input id="f-weight" type="number" placeholder="1000" oninput="checkStep2()"/></div>
+<div><label class="label">Grade</label><select id="f-grade" onchange="checkStep2()"><option value="">Select grade...</option><option value="AA">AA - Sashimi</option><option value="A">A - Premium</option><option value="B">B - Standard</option></select></div>
 <div><label class="label">Area / Watershed</label><input id="f-area" placeholder="Barkley Sound"/></div>
 <div><label class="label">Harvest Date</label><input id="f-date" type="date"/></div>
 </div>
-<button class="btn" onclick="nextStep(3)" id="btn2" disabled>Continue</button>
-<button class="btn btn-back" onclick="nextStep(1)">Back</button>
+<button class="btn" onclick="goStep(3)" id="btn2" disabled>Continue</button>
+<button class="btn btn-back" onclick="goStep(1)">Back</button>
 </div>
 
 <div id="step3" class="step">
 <h3>Step 3: How do you want to sell it?</h3>
-<p class="meta" style="margin-bottom:16px">Choose the product form. This determines your market options and price.</p>
+<p class="meta" style="margin-bottom:16px">Choose the product form. This affects your price and market options.</p>
 <div class="grid" id="form-grid"></div>
-<button class="btn" onclick="loadChannels();nextStep(4)" id="btn3" disabled>See my options</button>
-<button class="btn btn-back" onclick="nextStep(2)">Back</button>
+<button class="btn" onclick="goStep(4)" id="btn3" disabled>See my options</button>
+<button class="btn btn-back" onclick="goStep(2)">Back</button>
 </div>
 
 <div id="step4" class="step">
 <h3>Step 4: Your revenue options</h3>
-<p class="meta" style="margin-bottom:16px">Based on <strong id="summary-species"></strong>, <strong id="summary-weight"></strong> kg, <strong id="summary-form"></strong>:</p>
-<div id="channels-list"></div>
-<button class="btn" onclick="nextStep(5)" id="btn4" disabled>Choose this option & list</button>
-<button class="btn btn-back" onclick="nextStep(3)">Back</button>
+<p class="meta" style="margin-bottom:16px">Based on <strong id="sum-sp"></strong>, <strong id="sum-wt"></strong> lbs, <strong id="sum-fm"></strong>:</p>
+<div id="channels-list"><div class="meta">Loading options...</div></div>
+<button class="btn" onclick="goStep(5)" id="btn4" disabled>List my catch</button>
+<button class="btn btn-back" onclick="goStep(3)">Back</button>
 </div>
 
 <div id="step5" class="step">
-<h3 style="color:#10b981">Listed!</h3>
-<div id="confirmation" style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:24px;text-align:center">
-<div style="font-size:48px;margin-bottom:12px">&#x2705;</div>
-<div style="font-size:18px;font-weight:700;margin-bottom:8px">Your catch is listed</div>
-<div class="meta" id="confirm-details"></div>
-<div class="price" style="font-size:32px;margin-top:16px" id="confirm-estimate"></div>
+<div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:32px;text-align:center">
+<div style="font-size:48px;margin-bottom:12px">&#10004;</div>
+<h3 style="color:#10b981;margin:0 0 8px">Your catch is listed!</h3>
+<div class="meta" id="conf-detail"></div>
+<div class="price" style="font-size:36px;margin-top:16px" id="conf-rev"></div>
 <div class="meta">Estimated revenue</div>
 </div>
-<button class="btn" onclick="resetWizard()">List another catch</button>
+<button class="btn" onclick="resetAll()">List another catch</button>
 </div>
 </div>
 
 <script>
-const API="https://data.cantekhi.com";
-let state={species:'',weight:0,grade:'',area:'',date:'',form:'',channel:'',price:0};
-
-const SPECIES=['SOCKEYE','CHINOOK','HALIBUT','SPOT_PRAWN','SABLEFISH','DUNGENESS','COHO'];
-const FORMS=[
-{id:'whole_fresh',label:'Whole Fresh',desc:'Sell as-is, no processing needed',icon:'&#x1F41F;'},
-{id:'fillet_fresh',label:'Fresh Fillet',desc:'Cut and fillet, sell same day',icon:'&#x1FA78;'},
-{id:'frozen_hg',label:'Frozen H&G',desc:'Head & gut, blast freeze for export',icon:'&#x2744;'},
-{id:'live',label:'Live',desc:'Keep alive for premium markets',icon:'&#x1F990;'},
-{id:'smoked',label:'Smoked / Value-Added',desc:'Process into smoked, candy, or lox',icon:'&#x1F525;'},
-{id:'sashimi_grade',label:'Sashimi Grade',desc:'Highest quality for raw consumption',icon:'&#x1F363;'},
-{id:'frozen_tail',label:'Frozen Tails/Portions',desc:'Portion and freeze',icon:'&#x1F4E6;'}
+var API="https://data.cantekhi.com";
+var S={species:'',weight:0,grade:'',area:'',date:'',form:'',channel:'',priceLb:0};
+var SPECIES=['SOCKEYE','CHINOOK','HALIBUT','SPOT_PRAWN','SABLEFISH','DUNGENESS','COHO'];
+var FORMS=[
+{id:'whole_fresh',label:'Whole Fresh',desc:'Sell as-is from the boat',icon:'&#x1F41F;'},
+{id:'fillet_fresh',label:'Fresh Fillet',desc:'Fillet and sell same day',icon:'&#x1FA78;'},
+{id:'frozen_hg',label:'Frozen H&G',desc:'Head & gut, blast freeze',icon:'&#x2744;'},
+{id:'live',label:'Live',desc:'Keep alive for premium buyers',icon:'&#x1F990;'},
+{id:'smoked',label:'Smoked / Value-Added',desc:'Smoke, candy, or lox',icon:'&#x1F525;'},
+{id:'sashimi_grade',label:'Sashimi Grade',desc:'Top quality for raw consumption',icon:'&#x1F363;'},
+{id:'frozen_tail',label:'Frozen Portions',desc:'Portion and freeze',icon:'&#x1F4E6;'}
 ];
 
+function goStep(n){
+document.querySelectorAll('.step').forEach(function(s){s.classList.remove('active');});
+document.getElementById('step'+n).classList.add('active');
+document.querySelectorAll('.progress-dot').forEach(function(d,i){d.className='progress-dot'+(i<n-1?' done':'')+(i===n-1?' current':'');});
+if(n===3)renderForms();
+if(n===4)loadChannels();
+if(n===5)submitListing();
+}
+
 function renderSpecies(){
-document.getElementById('species-grid').innerHTML=SPECIES.map(s=>'<div class="card" onclick="selectSpecies(\''+s+'\')" id="sp-'+s+'"><div style="font-size:16px;font-weight:700">'+s.replace('_',' ')+'</div><div class="meta">Click to select</div></div>').join('');}
+document.getElementById('species-grid').innerHTML=SPECIES.map(function(s){return'<div class="card" onclick="pickSpecies(\''+s+'\')" id="sp-'+s+'"><div style="font-size:16px;font-weight:700">'+s.replace(/_/g,' ')+'</div></div>';}).join('');}
 
-function selectSpecies(s){state.species=s;document.querySelectorAll('#species-grid .card').forEach(c=>c.classList.remove('selected'));document.getElementById('sp-'+s).classList.add('selected');document.getElementById('btn1').disabled=false;}
+function pickSpecies(s){S.species=s;document.querySelectorAll('#species-grid .card').forEach(function(c){c.classList.remove('selected');});document.getElementById('sp-'+s).classList.add('selected');document.getElementById('btn1').disabled=false;}
 
-function checkStep2(){const w=document.getElementById('f-weight').value;const g=document.getElementById('f-grade').value;document.getElementById('btn2').disabled=!(w>0&&g);}
+function checkStep2(){var w=document.getElementById('f-weight').value;var g=document.getElementById('f-grade').value;document.getElementById('btn2').disabled=!(w>0&&g);}
 
 function renderForms(){
-const forms=FORMS.filter(f=>{
-if(state.species==='SPOT_PRAWN')return['live','frozen_tail','whole_fresh'].includes(f.id);
-if(state.species==='DUNGENESS')return['live','cooked_whole','whole_fresh'].includes(f.id)||f.id==='whole_fresh';
-return true;});
-document.getElementById('form-grid').innerHTML=forms.map(f=>'<div class="card" onclick="selectForm(\''+f.id+'\')" id="fm-'+f.id+'"><div style="font-size:24px;margin-bottom:6px">'+f.icon+'</div><div style="font-size:14px;font-weight:700">'+f.label+'</div><div class="meta">'+f.desc+'</div></div>').join('');}
+var forms=FORMS;
+if(S.species==='SPOT_PRAWN')forms=FORMS.filter(function(f){return['live','frozen_tail','whole_fresh'].indexOf(f.id)>=0;});
+if(S.species==='DUNGENESS')forms=FORMS.filter(function(f){return['live','whole_fresh'].indexOf(f.id)>=0;});
+document.getElementById('form-grid').innerHTML=forms.map(function(f){return'<div class="card" onclick="pickForm(\''+f.id+'\')" id="fm-'+f.id+'"><div style="font-size:22px;margin-bottom:4px">'+f.icon+'</div><div style="font-size:14px;font-weight:700">'+f.label+'</div><div class="meta">'+f.desc+'</div></div>';}).join('');}
 
-function selectForm(f){state.form=f;document.querySelectorAll('#form-grid .card').forEach(c=>c.classList.remove('selected'));document.getElementById('fm-'+f).classList.add('selected');document.getElementById('btn3').disabled=false;}
+function pickForm(f){S.form=f;document.querySelectorAll('#form-grid .card').forEach(function(c){c.classList.remove('selected');});document.getElementById('fm-'+f).classList.add('selected');document.getElementById('btn3').disabled=false;}
 
-async function loadChannels(){
-state.weight=parseFloat(document.getElementById('f-weight').value);
-state.grade=document.getElementById('f-grade').value;
-state.area=document.getElementById('f-area').value;
-state.date=document.getElementById('f-date').value||new Date().toISOString().slice(0,10);
-document.getElementById('summary-species').textContent=state.species.replace('_',' ');
-document.getElementById('summary-weight').textContent=state.weight;
-document.getElementById('summary-form').textContent=state.form.replace('_',' ');
-try{
-const r=await fetch(API+"/v1/channel-pricing?species="+state.species+"&form="+state.form);
-const d=await r.json();
-let options=d.options||[];
-if(!options.length){const r2=await fetch(API+"/v1/channel-pricing?species="+state.species);const d2=await r2.json();options=d2.options||[];}
-const sorted=options.sort((a,b)=>b.TYPICAL_PRICE_CAD_KG-a.TYPICAL_PRICE_CAD_KG);
-const best=sorted[0];
-document.getElementById('channels-list').innerHTML=sorted.map((o,i)=>{
-const rev=(o.TYPICAL_PRICE_CAD_KG*state.weight).toFixed(2);
-const isBest=i===0;
-const speedClass=o.PAYMENT_SPEED==='same_day'?'pill-fast':o.PAYMENT_SPEED.includes('T+1')?'pill-fast':o.PAYMENT_SPEED.includes('T+7')||o.PAYMENT_SPEED.includes('T+14')?'pill-slow':'pill-mod';
-return'<div class="estimate-card'+(isBest?' best':'')+'" onclick="selectChannel(\''+o.CHANNEL+'\','+o.TYPICAL_PRICE_CAD_KG+')"><div style="display:flex;justify-content:space-between;align-items:start"><div><div style="font-size:15px;font-weight:700">'+o.CHANNEL.replace('_',' ').replace(/\b\w/g,l=>l.toUpperCase())+(isBest?'<span class="tag" style="background:rgba(16,185,129,.15);color:#10b981">BEST PRICE</span>':'')+(o.PAYMENT_SPEED==='same_day'?'<span class="tag" style="background:rgba(251,191,36,.15);color:#fbbf24">FASTEST</span>':'')+(o.COMPLEXITY==='simple'?'<span class="tag" style="background:rgba(96,165,250,.15);color:#60a5fa">SIMPLEST</span>':'')+'</div><div class="meta" style="margin-top:4px">'+o.DESCRIPTION+'</div></div><div style="text-align:right"><div class="price" style="font-size:20px">$'+rev+'</div><div class="meta">$'+o.TYPICAL_PRICE_CAD_KG.toFixed(2)+'/kg</div></div></div><div style="margin-top:8px;display:flex;gap:8px"><span class="pill '+speedClass+'">'+o.PAYMENT_SPEED+'</span><span class="pill" style="background:rgba(107,168,184,.12);color:#6ba8b8">'+o.COMPLEXITY+'</span></div></div>';}).join('');
-}catch(e){document.getElementById('channels-list').innerHTML='<div class="meta">Error loading options: '+e.message+'</div>';}}
+function loadChannels(){
+S.weight=parseFloat(document.getElementById('f-weight').value)||0;
+S.grade=document.getElementById('f-grade').value;
+S.area=document.getElementById('f-area').value||'';
+S.date=document.getElementById('f-date').value||new Date().toISOString().slice(0,10);
+document.getElementById('sum-sp').textContent=S.species.replace(/_/g,' ');
+document.getElementById('sum-wt').textContent=S.weight;
+document.getElementById('sum-fm').textContent=S.form.replace(/_/g,' ');
+document.getElementById('channels-list').innerHTML='<div class="meta">Loading options...</div>';
+fetch(API+"/v1/channel-pricing?species="+S.species+"&form="+S.form).then(function(r){return r.json();}).then(function(d){
+var opts=d.options||[];
+if(opts.length===0){return fetch(API+"/v1/channel-pricing?species="+S.species).then(function(r){return r.json();});}
+return d;
+}).then(function(d){
+var opts=d.options||[];
+if(opts.length===0){document.getElementById('channels-list').innerHTML='<div class="meta">No pricing data available for this combination.</div>';return;}
+var html='';
+for(var i=0;i<opts.length;i++){
+var o=opts[i];
+var priceLb=Number(o.TYPICAL_PRICE_CAD_LB||o.TYPICAL_PRICE_CAD_KG/2.205).toFixed(2);
+var rev=(priceLb*S.weight).toFixed(2);
+var isBest=i===0;
+var isFast=o.PAYMENT_SPEED==='same_day'||o.PAYMENT_SPEED==='prepaid';
+var isSimple=o.COMPLEXITY==='simple';
+var speedCls=isFast?'pill-fast':o.PAYMENT_SPEED.indexOf('T+7')>=0||o.PAYMENT_SPEED.indexOf('T+14')>=0?'pill-slow':'pill-mod';
+html+='<div class="estimate-card'+(isBest?' best':'')+'" onclick="pickChannel(this,\''+o.CHANNEL+'\','+priceLb+')">';
+html+='<div style="display:flex;justify-content:space-between;align-items:start"><div>';
+html+='<div style="font-size:15px;font-weight:700">'+o.CHANNEL.replace(/_/g,' ').replace(/\b\w/g,function(l){return l.toUpperCase();});
+if(isBest)html+='<span class="tag" style="background:rgba(16,185,129,.15);color:#10b981">BEST PRICE</span>';
+if(isFast)html+='<span class="tag" style="background:rgba(251,191,36,.15);color:#fbbf24">FASTEST</span>';
+if(isSimple&&!isFast)html+='<span class="tag" style="background:rgba(96,165,250,.15);color:#60a5fa">SIMPLEST</span>';
+html+='</div><div class="meta" style="margin-top:4px">'+o.DESCRIPTION+'</div></div>';
+html+='<div style="text-align:right"><div class="price" style="font-size:20px">$'+rev+'</div><div class="meta">$'+priceLb+'/lb</div></div></div>';
+html+='<div style="margin-top:8px;display:flex;gap:8px"><span class="pill '+speedCls+'">'+o.PAYMENT_SPEED+'</span><span class="pill" style="background:rgba(107,168,184,.12);color:#6ba8b8">'+o.COMPLEXITY+'</span></div></div>';
+}
+document.getElementById('channels-list').innerHTML=html;
+}).catch(function(e){document.getElementById('channels-list').innerHTML='<div class="meta" style="color:#ff6b6b">Error: '+e.message+'</div>';});
+}
 
-function selectChannel(ch,price){state.channel=ch;state.price=price;document.querySelectorAll('.estimate-card').forEach(c=>c.style.borderColor='');event.currentTarget.style.borderColor='#05BFDB';document.getElementById('btn4').disabled=false;}
+function pickChannel(el,ch,price){S.channel=ch;S.priceLb=price;document.querySelectorAll('.estimate-card').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');document.getElementById('btn4').disabled=false;}
 
-async function submitListing(){
-const lot={lot_id:'LOT-'+Date.now(),species:state.species,weight_kg:state.weight,grade:state.grade.split(' - ')[0],listing_price:state.price,area:state.area,harvest_date:state.date,nation_id:'NAT_NUU',form:state.form};
-await fetch(API+"/v1/lots",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lot)});
-const rev=(state.price*state.weight).toFixed(2);
-document.getElementById('confirm-details').textContent=state.species.replace('_',' ')+' | '+state.weight+' kg | '+state.form.replace('_',' ')+' | '+state.channel.replace('_',' ');
-document.getElementById('confirm-estimate').textContent='$'+rev+' CAD';}
+function submitListing(){
+var lot={lot_id:'LOT-'+Date.now(),species:S.species,weight_kg:Math.round(S.weight/2.205),grade:S.grade,listing_price:S.priceLb*2.205,area:S.area,harvest_date:S.date,nation_id:'NAT_NUU',form:S.form};
+fetch(API+"/v1/lots",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lot)});
+var rev=(S.priceLb*S.weight).toFixed(2);
+document.getElementById('conf-detail').textContent=S.species.replace(/_/g,' ')+' | '+S.weight+' lbs | '+S.form.replace(/_/g,' ')+' | '+S.channel.replace(/_/g,' ');
+document.getElementById('conf-rev').textContent='$'+rev+' CAD';
+}
 
-function nextStep(n){
-document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-document.getElementById('step'+n).classList.add('active');
-document.querySelectorAll('.progress-dot').forEach((d,i)=>{d.className='progress-dot'+(i<n-1?' done':'')+(i===n-1?' current':'');});
-if(n===3)renderForms();
-if(n===5)submitListing();}
-
-function resetWizard(){state={species:'',weight:0,grade:'',area:'',date:'',form:'',channel:'',price:0};document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));document.querySelectorAll('input').forEach(i=>i.value='');document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);['btn1','btn2','btn3','btn4'].forEach(b=>document.getElementById(b).disabled=true);nextStep(1);}
+function resetAll(){S={species:'',weight:0,grade:'',area:'',date:'',form:'',channel:'',priceLb:0};document.querySelectorAll('.card').forEach(function(c){c.classList.remove('selected');});document.querySelectorAll('input').forEach(function(i){i.value='';});document.querySelectorAll('select').forEach(function(s){s.selectedIndex=0;});['btn1','btn2','btn3','btn4'].forEach(function(b){document.getElementById(b).disabled=true;});goStep(1);}
 
 renderSpecies();
 </script>
