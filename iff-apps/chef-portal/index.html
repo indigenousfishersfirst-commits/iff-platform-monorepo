@@ -3,112 +3,51 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IFF Chef Portal · chef.cantekhi.com</title>
+  <title>IFF Chef Portal</title>
   <link rel="stylesheet" href="/_shared/tokens.css"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap"/>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a1929; color: #e8f4f8; margin: 0; }
+    .header { background: linear-gradient(135deg, #088395, #05BFDB); padding: 20px 32px; }
+    .header h1 { margin: 0; font-size: 22px; }
+    .shell { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px; }
+    .card { background: rgba(8,131,149,0.08); border: 1px solid rgba(8,131,149,0.25); border-radius: 12px; padding: 20px; }
+    .stat { font-size: 24px; font-weight: 700; color: #05BFDB; }
+    .btn { background: linear-gradient(135deg, #088395, #05BFDB); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 12px; }
+    .hero { background: linear-gradient(135deg, #065f46, #0B5394); padding: 32px; border-radius: 16px; margin-bottom: 24px; }
+    .recipe-card { background: rgba(5,191,219,0.05); border: 1px solid rgba(8,131,149,0.3); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  </style>
 </head>
 <body>
-  <header class="iff-header">
-    <a class="iff-logo" href="/">
-      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0B5394"/><path d="M8 16 Q14 8 22 12 Q26 14 22 18 Q16 22 8 16 Z" fill="#fff"/></svg>
-      <span>IFF Chef</span>
-    </a>
-    <nav class="iff-nav">
-      <a href="#available">Today's catch</a>
-      <a href="#standing">Standing orders</a>
-      <a href="#provenance">Provenance</a>
-    </nav>
-  </header>
-
-  <main class="iff-shell iff-fade-in">
-    <div class="iff-hero" style="background: linear-gradient(135deg, var(--iff-spruce) 0%, var(--iff-ocean) 100%);">
-      <h1>Direct from the dock to your kitchen.</h1>
-      <p>Reserve specific lots from named vessels and Nations. Every fish carries a verified provenance chain you can show your guests.</p>
-    </div>
-
-    <h2 id="available">Today's catch</h2>
-    <div class="iff-grid iff-grid-3" id="catch-grid">
-      <div class="iff-card" style="text-align:center; color:var(--iff-ink-muted);">Loading available lots…</div>
-    </div>
-
-    <h2 style="margin-top:48px;" id="standing">Your standing orders</h2>
-    <div class="iff-card">
-      <table class="iff-table">
-        <thead><tr><th>Species</th><th>Form</th><th>Quantity</th><th>Frequency</th><th>Next delivery</th><th></th></tr></thead>
-        <tbody>
-          <tr><td>Sockeye</td><td>Whole H&G</td><td>40 kg</td><td>Weekly · Tue</td><td>May 7</td><td><a href="#">Edit</a></td></tr>
-          <tr><td>Dungeness</td><td>Live</td><td>20 kg</td><td>Weekly · Fri</td><td>May 8</td><td><a href="#">Edit</a></td></tr>
-          <tr><td>Spot prawn</td><td>Fresh tails</td><td>10 kg</td><td>Bi-weekly</td><td>May 14</td><td><a href="#">Edit</a></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h2 style="margin-top:48px;" id="provenance">Provenance verification</h2>
-    <div class="iff-card">
-      <div class="iff-stat-label">Verify any lot ID</div>
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <input id="lot-id" placeholder="LOT-2026-0347 or paste QR text" style="flex:1; padding:12px; border:1px solid var(--iff-border-strong); border-radius:var(--iff-radius);"/>
-        <button class="iff-btn" onclick="verifyLot()">Verify</button>
-      </div>
-      <div id="verify-result" style="margin-top:16px;"></div>
-    </div>
-  </main>
-
-  <script type="module">
-    import { IFFApi } from '/_shared/iff-api.js';
-    const api = new IFFApi();
-
+  <div class="header"><h1>IFF Chef Portal</h1></div>
+  <div class="shell">
+    <div class="hero"><h2>Direct from the dock to your kitchen.</h2><p>Reserve lots, explore recipes, verify provenance.</p></div>
+    <h3 style="color:#05BFDB">Available Catch</h3>
+    <div class="grid" id="catch-grid"></div>
+    <h3 style="color:#05BFDB">Recipes</h3>
+    <div id="recipes-list"></div>
+    <h3 style="color:#05BFDB;margin-top:32px">Verify Provenance</h3>
+    <div class="card" style="display:flex;gap:8px"><input id="trace-id" placeholder="Enter lot ID (e.g. L001)" style="flex:1;padding:10px;border:1px solid rgba(8,131,149,0.3);border-radius:8px;background:#071a2e;color:#e8f4f8"/><button class="btn" style="width:auto" onclick="traceLot()">Verify</button></div>
+    <div id="trace-result" style="margin-top:12px"></div>
+  </div>
+  <script>
+    const API = "https://data.cantekhi.com";
     async function loadCatch() {
-      try {
-        const data = await api.listLots({ status: 'listed', limit: 12 });
-        const grid = document.getElementById('catch-grid');
-        if (!data.lots?.length) { grid.innerHTML = '<div class="iff-card" style="text-align:center; color:var(--iff-ink-muted);">No active listings</div>'; return; }
-        grid.innerHTML = data.lots.map(l => `
-          <div class="iff-card">
-            <div style="display:flex; justify-content:space-between; align-items:start;">
-              <div>
-                <div style="font-family:var(--iff-font-display); font-size:20px;">${l.species}</div>
-                <div style="font-size:12px; color:var(--iff-ink-muted);">${l.gear || ''} · ${l.area || ''}</div>
-              </div>
-              <span class="iff-pill">${l.grade || '—'}</span>
-            </div>
-            <div style="margin-top:12px;">
-              <div style="font-size:13px; color:var(--iff-ink-soft);">${l.vessel_name || '—'} · ${l.nation || '—'}</div>
-              <div style="font-size:13px; color:var(--iff-ink-muted);">Landed ${new Date(l.harvested_at).toLocaleString()}</div>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
-              <div>
-                <div class="iff-stat" style="font-size:22px;">$${l.listing_price?.toFixed(2)}/kg</div>
-                <div style="font-size:11px; color:var(--iff-ink-muted);">${l.weight_kg?.toFixed(0)} kg available</div>
-              </div>
-              <button class="iff-btn iff-btn--accent" onclick="reserve('${l.lot_id}')">Reserve</button>
-            </div>
-          </div>
-        `).join('');
-      } catch (e) { console.error(e); }
+      const r = await fetch(API + "/v1/lots?status=listed"); const d = await r.json();
+      document.getElementById("catch-grid").innerHTML = (d.lots||[]).map(l => `<div class="card"><div style="font-size:18px;font-weight:700">${l.species}</div><div style="font-size:13px;color:#6ba8b8;margin:4px 0">${l.area||"Pacific"} &bull; Grade ${l.grade||"A"}</div><div class="stat">$${(l.listing_price||0).toFixed(2)}/kg</div><div style="font-size:13px;color:#6ba8b8">${(l.weight_kg||0).toFixed(0)} kg available</div><button class="btn" onclick="alert('Reserved ${l.lot_id}! Contact harvester for pickup.')">Reserve</button></div>`).join("") || "<p>No active listings</p>";
     }
-
-    window.verifyLot = async () => {
-      const id = document.getElementById('lot-id').value.trim();
-      if (!id) return;
-      try {
-        const r = await api.publicTrace(id);
-        const ok = r.chain_valid ? '✓ Verified' : '✗ Chain invalid';
-        document.getElementById('verify-result').innerHTML = `
-          <div class="iff-card" style="background: ${r.chain_valid ? 'rgba(5,150,105,.06)' : 'rgba(220,38,38,.06)'};">
-            <strong>${ok}</strong> — ${r.events_count || 0} events · ${r.lot?.species || '—'} · ${r.lot?.nation || '—'}
-            <div style="font-size:12px; color:var(--iff-ink-muted); margin-top:4px;">${r.public_url || ''}</div>
-          </div>`;
-      } catch (e) {
-        document.getElementById('verify-result').innerHTML = `<div class="iff-card" style="background: rgba(220,38,38,.06);">Could not verify: ${e.message}</div>`;
-      }
-    };
-    window.reserve = (id) => alert(`Reservation flow for ${id} — this would open a checkout sheet.`);
-
-    loadCatch();
-    setInterval(loadCatch, 60_000);
+    async function loadRecipes() {
+      const r = await fetch(API + "/v1/recipes"); const d = await r.json();
+      document.getElementById("recipes-list").innerHTML = (d.recipes||[]).map(rc => `<div class="recipe-card"><h4 style="margin:0 0 4px;color:#05BFDB">${rc.TITLE}</h4><div style="font-size:12px;color:#6ba8b8;margin-bottom:8px">${rc.CUISINE} &bull; ${rc.DIFFICULTY} &bull; ${rc.PREP_TIME_MIN} min &bull; Serves ${rc.SERVES}</div><p style="margin:8px 0;font-size:14px"><strong>Ingredients:</strong> ${rc.INGREDIENTS}</p><p style="margin:8px 0;font-size:14px"><strong>Method:</strong> ${rc.INSTRUCTIONS}</p><p style="margin:8px 0;font-size:13px;color:#6ba8b8"><strong>Pairing:</strong> ${rc.PAIRING}</p><p style="margin:8px 0;font-size:13px;font-style:italic;color:#9cb8c8">${rc.CHEF_NOTES}</p></div>`).join("");
+    }
+    async function traceLot() {
+      const id = document.getElementById("trace-id").value.trim(); if(!id)return;
+      const r = await fetch(API + "/public/trace/"+id); const d = await r.json();
+      if(d.chain_valid) { document.getElementById("trace-result").innerHTML = `<div class="card" style="background:rgba(16,185,129,0.08)"><strong style="color:#10b981">Verified</strong> &mdash; ${d.lot.species} from ${d.lot.nation||"—"}, ${d.lot.area||"Pacific"}. ${d.events_count} chain events.</div>`; }
+      else { document.getElementById("trace-result").innerHTML = `<div class="card" style="background:rgba(239,68,68,0.08)"><strong style="color:#ef4444">Not found</strong></div>`; }
+    }
+    loadCatch(); loadRecipes();
   </script>
-
 <div id="iff-ai-fab" style="position:fixed;bottom:24px;right:24px;z-index:9999"><div id="iff-ai-panel" style="display:none;width:380px;max-height:520px;background:#0a1929;border:1px solid rgba(8,131,149,0.4);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.4);overflow:hidden;margin-bottom:12px"><div style="padding:16px;background:linear-gradient(135deg,#088395,#05BFDB);color:white;font-weight:700">Ask IFF - Seafood Sommelier</div><div id="iff-ai-messages" style="height:340px;overflow-y:auto;padding:12px"></div><div style="padding:12px;border-top:1px solid rgba(8,131,149,0.3);display:flex;gap:8px"><input id="iff-ai-input" placeholder="Ask about recipes, sourcing, menu..." style="flex:1;padding:10px;border:1px solid rgba(8,131,149,0.3);border-radius:8px;background:#071a2e;color:#e8f4f8;outline:none" onkeydown="if(event.key==='Enter')window.iffAsk()"/><button onclick="window.iffAsk()" style="padding:10px 16px;background:linear-gradient(135deg,#088395,#05BFDB);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer">Send</button></div></div><button onclick="var p=document.getElementById('iff-ai-panel');p.style.display=p.style.display==='none'?'block':'none'" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#088395,#05BFDB);border:none;color:white;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(5,191,219,0.4)">AI</button></div><script>window.iffAsk=async function(){var input=document.getElementById("iff-ai-input");var msg=input.value.trim();if(!msg)return;input.value="";var msgs=document.getElementById("iff-ai-messages");msgs.innerHTML+="<div style='margin:8px 0;padding:8px 12px;background:rgba(8,131,149,0.15);border-radius:8px;color:#e8f4f8;text-align:right'>"+msg+"</div>";msgs.innerHTML+="<div id='iff-typing' style='margin:8px 0;color:#6ba8b8;font-style:italic'>Thinking...</div>";msgs.scrollTop=msgs.scrollHeight;try{var r=await fetch("https://data.cantekhi.com/v1/ai/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,persona:"chef_sommelier",caller:location.hostname})});var d=await r.json();document.getElementById("iff-typing").remove();msgs.innerHTML+="<div style='margin:8px 0;padding:8px 12px;background:rgba(5,191,219,0.08);border-radius:8px;color:#9cb8c8'>"+d.response.replace(/\n/g,"<br>")+"</div>";}catch(e){document.getElementById("iff-typing").remove();msgs.innerHTML+="<div style='margin:8px 0;color:#ff6b6b'>Error: "+e.message+"</div>";}msgs.scrollTop=msgs.scrollHeight;};</script>
 </body>
 </html>

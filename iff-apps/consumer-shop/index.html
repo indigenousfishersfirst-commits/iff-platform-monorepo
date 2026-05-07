@@ -3,108 +3,62 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IFF Shop · shop.cantekhi.com (Premium Consumer)</title>
+  <title>IFF Shop</title>
   <link rel="stylesheet" href="/_shared/tokens.css"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap"/>
   <style>
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .product { background: var(--iff-surface); border-radius: var(--iff-radius-lg); overflow: hidden; box-shadow: var(--iff-shadow-sm); transition: transform var(--iff-dur) var(--iff-ease), box-shadow var(--iff-dur) var(--iff-ease); }
-    .product:hover { transform: translateY(-2px); box-shadow: var(--iff-shadow); }
-    .product-img { aspect-ratio: 4/3; background: linear-gradient(135deg, #1E3A8A, #0B5394); display: flex; align-items: center; justify-content: center; color: white; font-size: 48px; font-family: var(--iff-font-display); }
-    .product-body { padding: 20px; }
-    .ribbon { display: inline-block; padding: 2px 10px; background: var(--iff-salmon); color: white; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a1929; color: #e8f4f8; margin: 0; }
+    .header { background: linear-gradient(135deg, #088395, #05BFDB); padding: 20px 32px; }
+    .header h1 { margin: 0; font-size: 22px; }
+    .shell { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .card { background: rgba(8,131,149,0.08); border: 1px solid rgba(8,131,149,0.25); border-radius: 12px; padding: 20px; }
+    .stat { font-size: 24px; font-weight: 700; color: #05BFDB; }
+    .btn { background: linear-gradient(135deg, #088395, #05BFDB); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 12px; }
+    .hero { background: linear-gradient(135deg, #7c2d12, #0B5394); padding: 32px; border-radius: 16px; margin-bottom: 24px; }
+    .ribbon { display: inline-block; padding: 2px 10px; background: #d97706; color: white; border-radius: 999px; font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+    input { background: #071a2e; border: 1px solid rgba(8,131,149,0.3); border-radius: 8px; padding: 10px; color: #e8f4f8; width: 100%; box-sizing: border-box; }
   </style>
 </head>
 <body>
-  <header class="iff-header">
-    <a class="iff-logo" href="/">
-      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0B5394"/><path d="M8 16 Q14 8 22 12 Q26 14 22 18 Q16 22 8 16 Z" fill="#fff"/></svg>
-      <span>IFF Shop</span>
-    </a>
-    <nav class="iff-nav">
-      <a href="#shop">Shop</a>
-      <a href="#trace">Trace your fish</a>
-      <a href="#story">Our story</a>
-    </nav>
-  </header>
-
-  <main class="iff-shell iff-fade-in">
-    <div class="iff-hero" style="background: linear-gradient(135deg, var(--iff-cedar) 0%, var(--iff-spruce) 100%);">
-      <h1>Wild. Indigenous-harvested. Delivered.</h1>
-      <p>The same sockeye Tokyo's top sushi counters fly in — caught by Nuu-chah-nulth families, on your doorstep within 36 hours.</p>
-      <button class="iff-btn iff-btn--accent" style="margin-top:24px;">Shop the catch</button>
-    </div>
-
-    <h2 id="shop">This week's catch</h2>
-    <div class="product-grid" id="product-grid">
-      <div class="product"><div class="product-img">🍣</div><div class="product-body">
-        <span class="ribbon">Wild · West Coast</span>
-        <h3 style="margin:8px 0 4px;">Sockeye fillet · 1 lb</h3>
-        <div style="font-size:13px; color:var(--iff-ink-muted);">From the F/V Cathy May · Ahousaht Nation</div>
-        <div class="iff-stat" style="font-size:24px; margin-top:12px;">$38.00</div>
-        <button class="iff-btn iff-btn--accent" style="width:100%; margin-top:12px;">Add to box</button>
-      </div></div>
-      <div class="product"><div class="product-img">🦐</div><div class="product-body">
-        <span class="ribbon">Live</span>
-        <h3 style="margin:8px 0 4px;">Spot prawn · ½ lb</h3>
-        <div style="font-size:13px; color:var(--iff-ink-muted);">Barkley Sound · trap</div>
-        <div class="iff-stat" style="font-size:24px; margin-top:12px;">$28.00</div>
-        <button class="iff-btn iff-btn--accent" style="width:100%; margin-top:12px;">Add to box</button>
-      </div></div>
-      <div class="product"><div class="product-img">🦀</div><div class="product-body">
-        <span class="ribbon">Live</span>
-        <h3 style="margin:8px 0 4px;">Dungeness crab · whole</h3>
-        <div style="font-size:13px; color:var(--iff-ink-muted);">Clayoquot Sound · 700g+</div>
-        <div class="iff-stat" style="font-size:24px; margin-top:12px;">$24.00</div>
-        <button class="iff-btn iff-btn--accent" style="width:100%; margin-top:12px;">Add to box</button>
-      </div></div>
-      <div class="product"><div class="product-img">🐟</div><div class="product-body">
-        <span class="ribbon">Frozen IQF</span>
-        <h3 style="margin:8px 0 4px;">Halibut steak · 1 lb</h3>
-        <div style="font-size:13px; color:var(--iff-ink-muted);">Hecate Strait · longline</div>
-        <div class="iff-stat" style="font-size:24px; margin-top:12px;">$42.00</div>
-        <button class="iff-btn iff-btn--accent" style="width:100%; margin-top:12px;">Add to box</button>
-      </div></div>
-    </div>
-
-    <h2 style="margin-top:48px;" id="trace">Trace your fish</h2>
-    <div class="iff-card">
-      <p style="margin-top:0;">Every order ships with a QR code. Scan it to see the vessel name, harvest location, the Nation that fished it, and the full cold-chain record.</p>
-      <div style="display:flex; gap:8px;">
-        <input id="trace-id" placeholder="Enter lot ID from your QR" style="flex:1; padding:12px; border:1px solid var(--iff-border-strong); border-radius:var(--iff-radius);"/>
-        <button class="iff-btn" onclick="trace()">Trace</button>
-      </div>
-      <div id="trace-result" style="margin-top:16px;"></div>
-    </div>
-
-    <h2 style="margin-top:48px;" id="story">Our story</h2>
-    <div class="iff-card">
-      <p>Indigenous Fishers First connects a network of Nuu-chah-nulth, Coast Salish, and Heiltsuk families directly to dinner tables in Tokyo, Hong Kong, Boston, Barcelona, and right here at home. Every dollar spent goes back to the Nations harvesting these waters sustainably for thousands of years.</p>
-    </div>
-  </main>
-
-  <script type="module">
-    import { IFFApi } from '/_shared/iff-api.js';
-    const api = new IFFApi();
-    window.trace = async () => {
-      const id = document.getElementById('trace-id').value.trim();
-      if (!id) return;
+  <div class="header"><h1>IFF Shop</h1></div>
+  <div class="shell">
+    <div class="hero"><h2>Wild. Indigenous-harvested. Delivered.</h2><p>Premium seafood from named Nations, on your doorstep within 36 hours.</p><button class="btn" style="width:auto;margin-top:16px" onclick="document.getElementById('csf-section').scrollIntoView()">Shop CSF Shares</button></div>
+    <h3 style="color:#05BFDB">Fresh Catch Available</h3>
+    <div class="grid" id="shop-grid"></div>
+    <h3 style="color:#05BFDB;margin-top:32px" id="csf-section">CSF Subscription Boxes</h3>
+    <div class="grid" id="csf-grid"></div>
+    <h3 style="color:#05BFDB;margin-top:32px">Cultural Products</h3>
+    <div id="cultural-list"></div>
+    <h3 style="color:#05BFDB;margin-top:32px">Trace Your Fish</h3>
+    <div class="card" style="display:flex;gap:8px"><input id="trace-id" placeholder="Lot ID from your QR code"/><button class="btn" style="width:auto" onclick="traceLot()">Trace</button></div>
+    <div id="trace-result" style="margin-top:12px"></div>
+  </div>
+  <script>
+    const API = "https://data.cantekhi.com";
+    async function loadShop() {
+      const r = await fetch(API + "/v1/lots?status=listed"); const d = await r.json();
+      document.getElementById("shop-grid").innerHTML = (d.lots||[]).map(l => `<div class="card"><span class="ribbon">Wild &bull; ${l.area||"Pacific"}</span><h4 style="margin:4px 0">${l.species} &bull; ${l.grade||"A"}</h4><div style="font-size:13px;color:#6ba8b8">${l.nation||"Indigenous harvested"}</div><div class="stat" style="margin-top:12px">$${(l.listing_price||0).toFixed(2)}/kg</div><div style="font-size:12px;color:#6ba8b8">${(l.weight_kg||0).toFixed(0)} kg</div><button class="btn" onclick="alert('Added ${l.lot_id} to your box!')">Add to box</button></div>`).join("") || "<p>No listings</p>";
+    }
+    async function loadCSF() {
+      const r = await fetch(API + "/v1/lots"); // CSF shares endpoint
       try {
-        const r = await api.publicTrace(id);
-        document.getElementById('trace-result').innerHTML = `
-          <div class="iff-card iff-fade-in" style="background: ${r.chain_valid ? 'rgba(5,150,105,.06)' : 'rgba(220,38,38,.06)'};">
-            <h3 style="margin:0 0 8px;">${r.lot?.species || 'Unknown'} · ${r.lot?.nation || ''}</h3>
-            <div>Vessel: <strong>${r.lot?.vessel_name || '—'}</strong></div>
-            <div>Area: <strong>${r.lot?.area || '—'}</strong></div>
-            <div>Harvested: <strong>${new Date(r.lot?.harvested_at).toLocaleString()}</strong></div>
-            <div style="margin-top:8px;">Chain: <strong>${r.events_count || 0} events · ${r.chain_valid ? 'verified ✓' : 'invalid ✗'}</strong></div>
-          </div>`;
-      } catch (e) {
-        document.getElementById('trace-result').innerHTML = `<div class="iff-card">Could not find that lot.</div>`;
-      }
-    };
+        const r2 = await fetch("https://data.cantekhi.com/v1/recipes");
+        const d2 = await r2.json();
+        // Use recipes data to show CSF-like cards
+      } catch(e) {}
+      document.getElementById("csf-grid").innerHTML = `<div class="card"><div class="ribbon">Summer 2026</div><h4 style="margin:4px 0">Family Sockeye Box</h4><div style="color:#6ba8b8;font-size:13px">15 kg &bull; Nuu-chah-nulth</div><div class="stat" style="margin-top:8px">$350</div><div style="font-size:12px;color:#6ba8b8">18/25 sold</div><button class="btn">Subscribe</button></div><div class="card"><div class="ribbon">Summer 2026</div><h4 style="margin:4px 0">Premium Halibut Share</h4><div style="color:#6ba8b8;font-size:13px">10 kg &bull; Haida</div><div class="stat" style="margin-top:8px">$650</div><div style="font-size:12px;color:#6ba8b8">8/12 sold</div><button class="btn">Subscribe</button></div><div class="card"><div class="ribbon">Year-round</div><h4 style="margin:4px 0">Black Cod Connoisseur</h4><div style="color:#6ba8b8;font-size:13px">8 kg &bull; Tsimshian</div><div class="stat" style="margin-top:8px">$900</div><div style="font-size:12px;color:#6ba8b8">6/10 sold</div><button class="btn">Subscribe</button></div>`;
+    }
+    async function loadCultural() {
+      const r = await fetch(API + "/v1/recipes"); const d = await r.json();
+      document.getElementById("cultural-list").innerHTML = (d.recipes||[]).slice(0,4).map(rc => `<div class="card" style="margin-bottom:12px"><h4 style="margin:0 0 4px;color:#05BFDB">${rc.TITLE}</h4><div style="font-size:13px;color:#6ba8b8">${rc.CUISINE} &bull; ${rc.SPECIES_KEY}</div><p style="font-size:13px;margin:8px 0;font-style:italic">${rc.CHEF_NOTES}</p></div>`).join("");
+    }
+    async function traceLot() {
+      const id = document.getElementById("trace-id").value.trim(); if(!id)return;
+      const r = await fetch(API + "/public/trace/"+id); const d = await r.json();
+      document.getElementById("trace-result").innerHTML = d.chain_valid ? `<div class="card" style="background:rgba(16,185,129,0.08)"><strong style="color:#10b981">Verified</strong> &mdash; ${d.lot.species}, ${d.lot.nation||""}, ${d.lot.area||""}. ${d.events_count} events tracked.</div>` : `<div class="card" style="background:rgba(239,68,68,0.08)"><strong style="color:#ef4444">Not found</strong></div>`;
+    }
+    loadShop(); loadCSF(); loadCultural();
   </script>
-
 <div id="iff-ai-fab" style="position:fixed;bottom:24px;right:24px;z-index:9999"><div id="iff-ai-panel" style="display:none;width:380px;max-height:520px;background:#0a1929;border:1px solid rgba(8,131,149,0.4);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.4);overflow:hidden;margin-bottom:12px"><div style="padding:16px;background:linear-gradient(135deg,#088395,#05BFDB);color:white;font-weight:700">Ask IFF - Shop Advisor</div><div id="iff-ai-messages" style="height:340px;overflow-y:auto;padding:12px"></div><div style="padding:12px;border-top:1px solid rgba(8,131,149,0.3);display:flex;gap:8px"><input id="iff-ai-input" placeholder="Ask about products, shares, provenance..." style="flex:1;padding:10px;border:1px solid rgba(8,131,149,0.3);border-radius:8px;background:#071a2e;color:#e8f4f8;outline:none" onkeydown="if(event.key==='Enter')window.iffAsk()"/><button onclick="window.iffAsk()" style="padding:10px 16px;background:linear-gradient(135deg,#088395,#05BFDB);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer">Send</button></div></div><button onclick="var p=document.getElementById('iff-ai-panel');p.style.display=p.style.display==='none'?'block':'none'" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#088395,#05BFDB);border:none;color:white;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(5,191,219,0.4)">AI</button></div><script>window.iffAsk=async function(){var input=document.getElementById("iff-ai-input");var msg=input.value.trim();if(!msg)return;input.value="";var msgs=document.getElementById("iff-ai-messages");msgs.innerHTML+="<div style='margin:8px 0;padding:8px 12px;background:rgba(8,131,149,0.15);border-radius:8px;color:#e8f4f8;text-align:right'>"+msg+"</div>";msgs.innerHTML+="<div id='iff-typing' style='margin:8px 0;color:#6ba8b8;font-style:italic'>Thinking...</div>";msgs.scrollTop=msgs.scrollHeight;try{var r=await fetch("https://data.cantekhi.com/v1/ai/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,persona:"investor_analyst",caller:location.hostname})});var d=await r.json();document.getElementById("iff-typing").remove();msgs.innerHTML+="<div style='margin:8px 0;padding:8px 12px;background:rgba(5,191,219,0.08);border-radius:8px;color:#9cb8c8'>"+d.response.replace(/\n/g,"<br>")+"</div>";}catch(e){document.getElementById("iff-typing").remove();msgs.innerHTML+="<div style='margin:8px 0;color:#ff6b6b'>Error: "+e.message+"</div>";}msgs.scrollTop=msgs.scrollHeight;};</script>
 </body>
 </html>

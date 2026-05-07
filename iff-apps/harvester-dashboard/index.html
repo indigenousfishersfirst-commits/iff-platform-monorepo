@@ -3,134 +3,77 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>IFF Harvester Dashboard · harvester.cantekhi.com</title>
+  <title>IFF Harvester Dashboard</title>
   <link rel="stylesheet" href="/_shared/tokens.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@500;700&display=swap"/>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a1929; color: #e8f4f8; margin: 0; }
+    .header { background: linear-gradient(135deg, #088395, #05BFDB); padding: 20px 32px; }
+    .header h1 { margin: 0; font-size: 22px; }
+    .shell { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { background: rgba(8,131,149,0.08); border: 1px solid rgba(8,131,149,0.25); border-radius: 12px; padding: 20px; }
+    .stat { font-size: 28px; font-weight: 700; color: #05BFDB; }
+    .stat-label { font-size: 12px; text-transform: uppercase; color: #6ba8b8; letter-spacing: 1px; margin-bottom: 4px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(8,131,149,0.2); font-size: 14px; }
+    th { color: #6ba8b8; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+    .btn { background: linear-gradient(135deg, #088395, #05BFDB); color: white; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; cursor: pointer; }
+    input, select { background: #071a2e; border: 1px solid rgba(8,131,149,0.3); border-radius: 8px; padding: 10px; color: #e8f4f8; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
+    .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .pill-up { background: rgba(16,185,129,0.15); color: #10b981; }
+    .pill-down { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .pill-flat { background: rgba(107,168,184,0.15); color: #6ba8b8; }
+    .hero { background: linear-gradient(135deg, #0B5394, #1E3A8A); padding: 32px; border-radius: 16px; margin-bottom: 24px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  </style>
 </head>
 <body>
-  <header class="iff-header">
-    <a class="iff-logo" href="/">
-      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0B5394"/><path d="M8 16 Q14 8 22 12 Q26 14 22 18 Q16 22 8 16 Z" fill="#fff"/><circle cx="20" cy="14" r="1.5" fill="#0B5394"/></svg>
-      <span>IFF Harvester</span>
-    </a>
-    <nav class="iff-nav">
-      <a href="#lots">My lots</a>
-      <a href="#prices">Prices</a>
-      <a href="#forecast">Forecast</a>
-      <a href="#trace">Traceability</a>
-      <a href="#settlements">Settlements</a>
-    </nav>
-  </header>
-
-  <main class="iff-shell iff-fade-in">
-    <section class="iff-hero">
-      <h1>Today's harvest. Today's price.</h1>
-      <p>Live ex-vessel benchmarks, your active lots, and where to send each fish to maximize landed value for your Nation.</p>
-      <div style="margin-top:24px; display:flex; gap:12px;">
-        <button class="iff-btn iff-btn--accent" onclick="newLot()">+ New lot</button>
-        <button class="iff-btn iff-btn--ghost" style="color:white; border-color:rgba(255,255,255,.4);" onclick="refreshAll()">↻ Refresh</button>
+  <div class="header"><h1>IFF Harvester Dashboard</h1></div>
+  <div class="shell">
+    <div class="hero"><h2>Today's harvest. Today's price.</h2><p>Live signals, your lots, and where to send each fish.</p></div>
+    <h3 style="color:#05BFDB">Live Market Signals</h3>
+    <div class="grid" id="signals-grid"></div>
+    <h3 style="color:#05BFDB">My Lots</h3>
+    <div class="card"><table><thead><tr><th>Lot</th><th>Species</th><th>Weight</th><th>Grade</th><th>Price</th><th>Status</th></tr></thead><tbody id="lots-body"></tbody></table></div>
+    <h3 style="color:#05BFDB;margin-top:32px">Create New Lot</h3>
+    <div class="card">
+      <div class="form-grid">
+        <div><label style="color:#6ba8b8;font-size:12px">Species</label><select id="new-species"><option>SOCKEYE</option><option>CHINOOK</option><option>HALIBUT</option><option>SPOT_PRAWN</option><option>SABLEFISH</option><option>DUNGENESS</option><option>COHO</option></select></div>
+        <div><label style="color:#6ba8b8;font-size:12px">Weight (kg)</label><input id="new-weight" type="number" placeholder="500"/></div>
+        <div><label style="color:#6ba8b8;font-size:12px">Grade</label><select id="new-grade"><option>AA</option><option>A</option><option>B</option></select></div>
+        <div><label style="color:#6ba8b8;font-size:12px">Price (CAD/kg)</label><input id="new-price" type="number" step="0.01" placeholder="18.50"/></div>
+        <div><label style="color:#6ba8b8;font-size:12px">Area</label><input id="new-area" placeholder="Barkley Sound"/></div>
+        <div><label style="color:#6ba8b8;font-size:12px">Harvest Date</label><input id="new-date" type="date"/></div>
       </div>
-    </section>
-
-    <section id="prices" class="iff-grid iff-grid-4" style="margin-bottom: 32px;">
-      <div class="iff-card"><div class="iff-stat-label">Sockeye · BC</div><div class="iff-stat" id="px-sockeye">—</div><span class="iff-pill iff-pill--up" id="px-sockeye-pill">loading</span></div>
-      <div class="iff-card"><div class="iff-stat-label">Dungeness</div><div class="iff-stat" id="px-dungeness">—</div><span class="iff-pill" id="px-dungeness-pill">loading</span></div>
-      <div class="iff-card"><div class="iff-stat-label">Spot prawn</div><div class="iff-stat" id="px-prawn">—</div><span class="iff-pill" id="px-prawn-pill">loading</span></div>
-      <div class="iff-card"><div class="iff-stat-label">Halibut</div><div class="iff-stat" id="px-halibut">—</div><span class="iff-pill" id="px-halibut-pill">loading</span></div>
-    </section>
-
-    <section id="lots" style="margin-bottom: 32px;">
-      <h2>My active lots</h2>
-      <div class="iff-card">
-        <table class="iff-table">
-          <thead><tr><th>Lot ID</th><th>Species</th><th>Weight</th><th>Grade</th><th>Status</th><th>Listing $</th><th>Best route</th><th></th></tr></thead>
-          <tbody id="lots-body"><tr><td colspan="8" style="text-align:center; color:var(--iff-ink-muted);">Loading lots…</td></tr></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="forecast" class="iff-grid iff-grid-2" style="margin-bottom: 32px;">
-      <div class="iff-card">
-        <div class="iff-stat-label">M11 · ARIMA-X 3-month forecast</div>
-        <div id="m11-content" style="margin-top:12px; color:var(--iff-ink-muted);">Loading…</div>
-      </div>
-      <div class="iff-card">
-        <div class="iff-stat-label">M16 · PCA-VAR 12-month outlook</div>
-        <div id="m16-content" style="margin-top:12px; color:var(--iff-ink-muted);">Loading…</div>
-      </div>
-    </section>
-
-    <section id="trace">
-      <h2>Traceability quick-add</h2>
-      <div class="iff-card iff-grid iff-grid-3">
-        <button class="iff-btn iff-btn--ghost" onclick="addEvent('LANDED')">📍 Landed</button>
-        <button class="iff-btn iff-btn--ghost" onclick="addEvent('PROCESSED')">🔪 Processed</button>
-        <button class="iff-btn iff-btn--ghost" onclick="addEvent('PACKED')">📦 Packed</button>
-        <button class="iff-btn iff-btn--ghost" onclick="addEvent('SHIPPED')">🚚 Shipped</button>
-      </div>
-    </section>
-  </main>
-
-  <script type="module">
-    import { IFFApi } from '/_shared/iff-api.js';
-    const api = new IFFApi();
-    window.api = api;
-
-    async function loadPrices() {
-      try {
-        const data = await api.signals({ kind: 'composite' });
-        const find = id => data.signals?.find(s => s.signal_id === id);
-        const cs01 = find('CS01'); // sockeye composite
-        const cs02 = find('CS02'); // dungeness
-        const cs03 = find('CS03'); // prawn
-        const cs04 = find('CS04'); // halibut
-        if (cs01) { document.getElementById('px-sockeye').textContent = `$${cs01.value?.toFixed(2)}/kg`;
-                    setPill('px-sockeye-pill', cs01.direction); }
-        if (cs02) { document.getElementById('px-dungeness').textContent = `$${cs02.value?.toFixed(2)}/kg`;
-                    setPill('px-dungeness-pill', cs02.direction); }
-        if (cs03) { document.getElementById('px-prawn').textContent = `$${cs03.value?.toFixed(2)}/kg`;
-                    setPill('px-prawn-pill', cs03.direction); }
-        if (cs04) { document.getElementById('px-halibut').textContent = `$${cs04.value?.toFixed(2)}/kg`;
-                    setPill('px-halibut-pill', cs04.direction); }
-      } catch (e) { console.error(e); }
-    }
-    function setPill(id, dir) {
-      const el = document.getElementById(id);
-      el.textContent = dir === 'up' ? '▲ Rising' : dir === 'down' ? '▼ Falling' : '→ Stable';
-      el.className = 'iff-pill ' + (dir === 'up' ? 'iff-pill--up' : dir === 'down' ? 'iff-pill--down' : '');
+      <button class="btn" onclick="createLot()" style="margin-top:16px;width:100%">List Lot</button>
+      <div id="lot-result" style="margin-top:12px"></div>
+    </div>
+  </div>
+  <script>
+    const API = "https://data.cantekhi.com";
+    async function loadSignals() {
+      const r = await fetch(API + "/v1/signals?kind=composite"); const d = await r.json();
+      document.getElementById("signals-grid").innerHTML = (d.signals||[]).map(s => {
+        const cls = s.direction==="up"?"pill-up":s.direction==="down"?"pill-down":"pill-flat";
+        const arrow = s.direction==="up"?"▲":s.direction==="down"?"▼":"→";
+        return `<div class="card"><div class="stat-label">${s.signal_id} (${s.species||"all"})</div><div class="stat">${s.value.toFixed(4)} ${s.unit}</div><span class="pill ${cls}">${arrow} ${s.direction}</span></div>`;
+      }).join("");
     }
     async function loadLots() {
-      try {
-        const data = await api.listLots({ status: 'listed,in_auction' });
-        const body = document.getElementById('lots-body');
-        if (!data.lots?.length) { body.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--iff-ink-muted);">No active lots</td></tr>'; return; }
-        body.innerHTML = data.lots.map(l => `
-          <tr>
-            <td><code>${l.lot_id?.slice(0, 8)}</code></td>
-            <td>${l.species}</td>
-            <td>${l.weight_kg?.toFixed(0)} kg</td>
-            <td>${l.grade || '—'}</td>
-            <td><span class="iff-pill">${l.status}</span></td>
-            <td>$${l.listing_price?.toFixed(2) || '—'}</td>
-            <td>${l.destination || 'Auto'}</td>
-            <td><a href="/lot/${l.lot_id}">Open</a></td>
-          </tr>
-        `).join('');
-      } catch (e) { console.error(e); }
+      const r = await fetch(API + "/v1/lots"); const d = await r.json();
+      document.getElementById("lots-body").innerHTML = (d.lots||[]).map(l => `<tr><td><code>${l.lot_id}</code></td><td>${l.species}</td><td>${(l.weight_kg||0).toFixed(0)} kg</td><td>${l.grade||"-"}</td><td>$${(l.listing_price||0).toFixed(2)}/kg</td><td>${l.status}</td></tr>`).join("");
     }
-    async function loadForecasts() {
-      // Frontend just shows latest M11/M16 — backend wires from ANALYTICS.MODEL_FORECASTS
-      document.getElementById('m11-content').innerHTML = `Sockeye → <strong>$19.40/kg</strong> in 3 mo · 80% CI [17.20, 21.60]`;
-      document.getElementById('m16-content').innerHTML = `Sockeye → <strong>$22.10/kg</strong> in 12 mo · driven by JPY/CAD + Toyosu uplift`;
+    async function createLot() {
+      const lot = { lot_id: "LOT-"+Date.now(), species: document.getElementById("new-species").value, weight_kg: parseFloat(document.getElementById("new-weight").value), grade: document.getElementById("new-grade").value, listing_price: parseFloat(document.getElementById("new-price").value), area: document.getElementById("new-area").value, harvest_date: document.getElementById("new-date").value, nation_id: "NAT_NUU" };
+      if (!lot.weight_kg || !lot.listing_price) { document.getElementById("lot-result").innerHTML="<span style='color:#ff6b6b'>Fill weight and price</span>"; return; }
+      const r = await fetch(API + "/v1/lots", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lot)});
+      const d = await r.json();
+      document.getElementById("lot-result").innerHTML = d.success ? "<span style='color:#10b981'>Lot listed! ID: "+lot.lot_id+"</span>" : "<span style='color:#ff6b6b'>Error</span>";
+      loadLots();
     }
-    window.refreshAll = () => { loadPrices(); loadLots(); loadForecasts(); };
-    window.newLot = () => alert('Wizard: scan QR on dock or enter manually.');
-    window.addEvent = (type) => alert(`Add ${type} event — picks lot + GPS + photo.`);
-    refreshAll();
-    setInterval(loadPrices, 60_000);
+    loadSignals(); loadLots();
+    setInterval(loadSignals, 60000);
   </script>
-
 <div id="iff-ai-fab" style="position:fixed;bottom:24px;right:24px;z-index:9999"><div id="iff-ai-panel" style="display:none;width:380px;max-height:520px;background:#0a1929;border:1px solid rgba(8,131,149,0.4);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.4);overflow:hidden;margin-bottom:12px"><div style="padding:16px;background:linear-gradient(135deg,#088395,#05BFDB);color:white;font-weight:700">Ask IFF - Harvester Coach</div><div id="iff-ai-messages" style="height:340px;overflow-y:auto;padding:12px"></div><div style="padding:12px;border-top:1px solid rgba(8,131,149,0.3);display:flex;gap:8px"><input id="iff-ai-input" placeholder="Ask about pricing, lots, marketing..." style="flex:1;padding:10px;border:1px solid rgba(8,131,149,0.3);border-radius:8px;background:#071a2e;color:#e8f4f8;outline:none" onkeydown="if(event.key==='Enter')window.iffAsk()"/><button onclick="window.iffAsk()" style="padding:10px 16px;background:linear-gradient(135deg,#088395,#05BFDB);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer">Send</button></div></div><button onclick="var p=document.getElementById('iff-ai-panel');p.style.display=p.style.display==='none'?'block':'none'" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#088395,#05BFDB);border:none;color:white;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(5,191,219,0.4)">AI</button></div><script>window.iffAsk=async function(){var input=document.getElementById("iff-ai-input");var msg=input.value.trim();if(!msg)return;input.value="";var msgs=document.getElementById("iff-ai-messages");msgs.innerHTML+="<div style='margin:8px 0;padding:8px 12px;background:rgba(8,131,149,0.15);border-radius:8px;color:#e8f4f8;text-align:right'>"+msg+"</div>";msgs.innerHTML+="<div id='iff-typing' style='margin:8px 0;color:#6ba8b8;font-style:italic'>Thinking...</div>";msgs.scrollTop=msgs.scrollHeight;try{var r=await fetch("https://data.cantekhi.com/v1/ai/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg,persona:"harvester_coach",caller:location.hostname})});var d=await r.json();document.getElementById("iff-typing").remove();msgs.innerHTML+="<div style='margin:8px 0;padding:8px 12px;background:rgba(5,191,219,0.08);border-radius:8px;color:#9cb8c8'>"+d.response.replace(/\n/g,"<br>")+"</div>";}catch(e){document.getElementById("iff-typing").remove();msgs.innerHTML+="<div style='margin:8px 0;color:#ff6b6b'>Error: "+e.message+"</div>";}msgs.scrollTop=msgs.scrollHeight;};</script>
 </body>
 </html>
